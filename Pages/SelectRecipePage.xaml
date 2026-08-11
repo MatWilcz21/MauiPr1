@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Pages.SelectRecipePage"
+             Title="SelectRecipePage"
+             xmlns:viewmodel="clr-namespace:MauiApp1.ViewerModels"
+             xmlns:recipes="clr-namespace:MauiApp1.Recipes"
+             x:DataType="viewmodel:SelectRecipeViewerModel"
+             >
+    <Grid RowDefinitions="Auto,*,Auto" Padding="10" RowSpacing="15">
+
+        <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions=".70*, .30*" RowSpacing="10" ColumnSpacing="5" Grid.Row="0">
+
+            <Entry Placeholder="Add new recipe"
+       Text="{Binding EnterNewRecipeName}"
+       ReturnType="Done"
+       ReturnCommand="{Binding AddNewRecipeCommand}"
+       Grid.Row="1"
+       Grid.Column="0"
+       Grid.ColumnSpan="1"/>
+            
+            
+            <Button Text="XXX Add new preset XXX" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Command="{Binding GoToSelectRecipePageCommand}"/>
+
+        </Grid>
+
+        <ScrollView VerticalScrollBarVisibility="Never" Grid.Row="1">
+            <CollectionView ItemsSource="{Binding RecipesList}">
+
+                <CollectionView.ItemTemplate>
+
+                    <DataTemplate x:DataType="recipes:Recipe">
+
+                        <SwipeView >
+                            <SwipeView.RightItems>
+
+                                <SwipeItem Text="Del"
+                               BackgroundColor="Red"
+                               Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.DeleteCommand}"
+                               CommandParameter="{Binding .}"/>
+
+                            </SwipeView.RightItems>
+                            <SwipeView.LeftItems>
+
+                                <SwipeItem Text="Edit recipe"
+                                       BackgroundColor="Green"
+                                       Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.EditThisRecipeCommand}"
+                                       CommandParameter="{Binding .}"/>
+
+                            </SwipeView.LeftItems>
+
+                            <Border StrokeShape="RoundRectangle 10"
+                                Padding="3">
+                                <Grid Padding="0.5" RowDefinitions="40,40" ColumnDefinitions=".60*,.20*,.20*" RowSpacing="3" ColumnSpacing="3">
+
+                                    <Label Text="{Binding Name}"
+                                           Grid.Column="0"
+                                           Grid.Row="0"
+                                           Grid.RowSpan="2"
+                                           VerticalTextAlignment="Center"
+                                           FontSize="20"/>
+
+
+                                    <Button CornerRadius="10" Text="-" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.GoToMergeRecipeToListCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </Border>
+                        </SwipeView>
+
+                    </DataTemplate>
+                    
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+        </ScrollView>
+
+        <Grid RowDefinitions="50" ColumnDefinitions=".50*, .50*" RowSpacing="10" ColumnSpacing="5" Grid.Row="2">
+
+            <Button CornerRadius="10" Text="Load" Grid.Row="0" Grid.Column="0" BackgroundColor="Red"
+Command="{Binding LoadRecipesCommand}"/>
+            <Button CornerRadius="10" Text="Save" Grid.Row="0" Grid.Column="1" BackgroundColor="Red"
+    Command="{Binding SaveRecipesCommand}"/>
+
+        </Grid>
+
+    </Grid>
+</ContentPage>

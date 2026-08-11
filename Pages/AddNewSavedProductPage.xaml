@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.AddNewSavedProductPage"
+             Title="AddNewSavedProductPage">
+    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions=".80*, .20*"  Padding="10" RowSpacing="15">
+        <Border StrokeShape="RoundRectangle 10" Padding="3,3,3,3" BackgroundColor="White" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid Padding="0.5" RowDefinitions="40,40" ColumnDefinitions=".80*, .10*,.10*" RowSpacing="3" ColumnSpacing="3">
+
+                <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalTextAlignment="Center" FontSize="30">
+
+
+                    <Label.Text>
+                        <MultiBinding StringFormat="{}{0} 1{1}.">
+                            <Binding Path="ProductViewX.DisplayName"/>
+                            <Binding Path="SelectedUnit"/>
+                        </MultiBinding>
+                    </Label.Text>
+
+
+                </Label>
+            </Grid>
+        </Border>
+
+
+        <Picker
+            Title="Select Unit"
+            ItemsSource="{Binding Units}"
+            SelectedItem="{Binding SelectedUnit}"
+            Grid.Row="1" Grid.ColumnSpan="2"
+            SelectedIndex="0">
+            
+        </Picker>
+        
+        <Button Grid.Row="2" Grid.ColumnSpan="2" Text="Save product" Command="{Binding SaveProductCommand}">
+        </Button>
+    </Grid>
+</ContentPage>

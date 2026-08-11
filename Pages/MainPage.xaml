@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.MainPage"
+             Title="Home"
+             xmlns:viewmodel="clr-namespace:MauiApp1.ViewerModels"
+             xmlns:products="clr-namespace:MauiApp1.ViewerModels.Products"
+             x:DataType="viewmodel:MainViewModel"
+             >
+
+    
+
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="10" RowSpacing="15">
+
+        <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions=".70*, .30*" RowSpacing="10" ColumnSpacing="5" Grid.Row="0">
+
+            <Button Text="Add products from preset" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Command="{Binding GoToSelectRecipePageCommand}"/>
+            <Entry Placeholder="Add product"
+                   Text="{Binding Text}"
+                   ReturnType="Done"
+                   ReturnCommand="{Binding AddCommand}"
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="1"/>
+            <Button Text="Add product" Command="{Binding AddCommand}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1"/>
+
+            <Button Text="Update" Command="{Binding AddCommand}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+        </Grid>
+
+        <ScrollView VerticalScrollBarVisibility="Never" Grid.Row="1">
+            <CollectionView ItemsSource="{Binding Items}">
+
+                <CollectionView.ItemTemplate>
+
+
+                    <DataTemplate x:DataType="products:ProductView">
+
+                        <SwipeView >
+                            <SwipeView.RightItems>
+
+                                <SwipeItem Text="Del"
+                                   BackgroundColor="Red"
+                                   Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.DeleteCommand}"
+                                   CommandParameter="{Binding .}"/>
+
+                            </SwipeView.RightItems>
+                            <SwipeView.LeftItems>
+
+                                <SwipeItem Text="Status"
+                                           BackgroundColor="Green"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeStatusCommand}"
+                                           CommandParameter="{Binding .}"/>
+
+                            </SwipeView.LeftItems>
+
+                            <Border StrokeShape="RoundRectangle 10"
+                                    Padding="3">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="BackgroundColor" Value="White"/>
+
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="Border"
+                             Binding="{Binding IsInCart}"
+                             Value="True">
+                                                <Setter Property="BackgroundColor" Value="#DDDDDD"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid Padding="0.5" RowDefinitions="40,40" ColumnDefinitions=".80*, .10*,.10*" RowSpacing="3" ColumnSpacing="3">
+
+                                    <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalTextAlignment="Center" FontSize="30">
+
+
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} {1}{2}.">
+                                                <Binding Path="DisplayName"/>
+                                                <Binding Path="Count"/>
+                                                <Binding Path="Unit.Name"/>
+                                            </MultiBinding>
+                                        </Label.Text>
+
+
+                                    </Label>
+
+
+                                    <Button CornerRadius="10" Text="Add" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" IsVisible="{Binding ShowAddToSavedProductsButton}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.SaveProductCommand}"
+                                            CommandParameter="{Binding .}"/>
+
+
+                                    <Button CornerRadius="10" Text="+" Grid.Row="0" Grid.Column="2" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.IncrementCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    <Button CornerRadius="10" Text="-" Grid.Row="1" Grid.Column="2"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.DecrementCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </Border>
+                        </SwipeView>
+
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+        </ScrollView>
+
+        <Grid RowDefinitions="50" ColumnDefinitions=".50*, .50*" RowSpacing="10" ColumnSpacing="5" Grid.Row="2">
+
+            <Button Text="Edit products presets" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"/>
+            <Button CornerRadius="10" Text="X" Grid.Row="0" Grid.Column="1" BackgroundColor="Red"
+        Command="{Binding DeleteAllCommand}"/>
+
+        </Grid>
+
+    </Grid>
+
+</ContentPage>
