@@ -31,11 +31,4 @@ public partial class CustomProductView : ProductView
 	{
 		return ProductName;
 	}
-
-	public override ProductView GetInRecipeEditProductX(ProductView productView)
-	{
-		CustomProductView product = (CustomProductView)productView;
-
-		return new CustomInRecipeEditProduct(product.GetName(), product.Count, true);
-	}
 }

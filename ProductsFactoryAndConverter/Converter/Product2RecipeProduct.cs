@@ -6,8 +6,8 @@ namespace MauiApp1.ProductsFactoryAndConverter.Converter;
 class Product2RecipeProduct
 {
 
-	public static RecipeProduct Convert(ProductView product)
+	public static PackedRecipeProduct Convert(ProductView product)
 	{
-		return new RecipeProduct(product.GetName(), (byte)product.Count, true);
+		return new PackedRecipeProduct(product.GetName(), (byte)product.Count, true);
 	}
 }

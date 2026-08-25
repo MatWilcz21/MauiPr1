@@ -6,7 +6,7 @@
              xmlns:mergeproduct="clr-namespace:MauiApp1.ViewerModels"
              xmlns:recipe="clr-namespace:MauiApp1.Recipes"
              xmlns:editrecipe ="clr-namespace:MauiApp1.ViewerModels"
-             xmlns:products ="clr-namespace:MauiApp1.ViewerModels.Products"
+             xmlns:products ="clr-namespace:MauiApp1.Products"
              x:DataType="editrecipe:EditSelectedRecipeViewModel"
              >
     
@@ -36,7 +36,7 @@
                 <CollectionView.ItemTemplate>
 
 
-                    <DataTemplate x:DataType="products:ProductView">
+                    <DataTemplate x:DataType="products:RecipeProduct">
 
                         <SwipeView >
                             <SwipeView.RightItems>
@@ -77,7 +77,7 @@
 
 
                                         <Label.Text>
-                                            <MultiBinding StringFormat="{}{0} {1}">
+                                            <MultiBinding StringFormat="{}{0} {1}.">
                                                 <Binding Path="DisplayName"/>
                                                 <Binding Path="Count"/>
                                             </MultiBinding>

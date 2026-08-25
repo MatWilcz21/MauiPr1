@@ -1,31 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiApp1.Products;
 using MauiApp1.Recipes;
-using MauiApp1.ViewerModels.Products;
 using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewerModels;
-
-public partial class MergeProduct : ObservableObject
-{
-
-	public MergeProduct(string _name, int _oldCount, int _newCount, bool _merge)
-	{
-		Name = _name;
-		DisplayName = _name.Capitalize();
-
-		OldCount = _oldCount;
-		NewCount = _newCount;
-		Merge = _merge;
-	}
-
-	public string Name { get; set; }
-	[ObservableProperty] public partial string DisplayName { get; set; }
-	[ObservableProperty] public partial int OldCount { get; set; }
-	[ObservableProperty] public partial int NewCount { get; set; }
-	[ObservableProperty] public partial bool Merge { get; set; }
-
-}
 
 public partial class MergeToListViewModel : ObservableObject, IQueryAttributable
 {
@@ -45,13 +24,18 @@ public partial class MergeToListViewModel : ObservableObject, IQueryAttributable
 
 		for (int i = 0; i < recipe.ProductsList.Count; i++)
 		{
-			int currentProductCount = GetCurrentProductCount(recipe.ProductsList[i].Name);
-			MergeProductsList.Add(recipe.ProductsList[i].ConvertToMergeProduct(currentProductCount));
+			float currentProductCount = GetCurrentProductCount(recipe.ProductsList[i].Name);
+
+			PackedRecipeProduct packedRecipeProduct = recipe.ProductsList[i];
+
+			MergeProduct newMergeProduct = new MergeProduct(packedRecipeProduct.Name, currentProductCount, currentProductCount + packedRecipeProduct.Count, packedRecipeProduct.MergeByDefault);
+
+			MergeProductsList.Add(newMergeProduct);
 		}
 
-		int GetCurrentProductCount(string productName)
+		float GetCurrentProductCount(string productName)
 		{
-			ProductView? productView = mainViewModel.Items.FirstOrDefault(p => p.GetName() == productName);
+			BaseProduct? productView = mainViewModel.Items.FirstOrDefault(p => p.Name == productName);
 
 			if (productView is null) return 0;
 

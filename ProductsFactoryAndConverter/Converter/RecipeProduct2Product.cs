@@ -7,12 +7,9 @@ class RecipeProduct2Product
 {
 
 
-	public static ProductView Convert(RecipeProduct recipeProduct)
+	public static ProductView Convert(PackedRecipeProduct recipeProduct)
 	{
-		if (SavedProducts.Products.FirstOrDefault(p => p.Name == recipeProduct.Name) is null)
-			return new CustomProductView(recipeProduct.Name, recipeProduct.Count, false);
-		else
-			return new DefinedProductView(recipeProduct.Name, recipeProduct.Count, false);
+		return null;
 	}
 
 }

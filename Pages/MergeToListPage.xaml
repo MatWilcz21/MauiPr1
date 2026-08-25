@@ -4,6 +4,7 @@
              x:Class="MauiApp1.Pages.MergeToListPage"
              Title="MergeToListPage"
              xmlns:mergeproduct="clr-namespace:MauiApp1.ViewerModels"
+             xmlns:products="clr-namespace:MauiApp1.Products"
              x:DataType="mergeproduct:MergeToListViewModel"
              >
 
@@ -20,7 +21,7 @@
                 <CollectionView.ItemTemplate>
 
 
-                    <DataTemplate x:DataType="mergeproduct:MergeProduct">
+                    <DataTemplate x:DataType="products:MergeProduct">
 
                         <SwipeView >
                             <SwipeView.LeftItems>

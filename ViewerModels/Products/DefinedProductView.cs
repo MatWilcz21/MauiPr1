@@ -33,16 +33,6 @@ public partial class DefinedProductView : ProductView
 
 	public ProductDefinition ProductDefinition { get; protected set; }
 
-	public override ProductView GetInRecipeEditProductX(ProductView productView)
-	{
-		throw new NotImplementedException();
-		return productView;
-
-		//DefinedProductView product = (DefinedProductView)productView;
-
-		//return new DefinedInRecipeEditProduct(product.ProductDefinition, product.Count, true);
-	}
-
 	public override string GetName()
 	{
 		return ProductDefinition.Name;

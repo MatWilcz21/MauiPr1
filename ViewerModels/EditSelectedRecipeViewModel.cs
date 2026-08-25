@@ -1,91 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MauiApp1.ProductsFactoryAndConverter.Converter;
+using MauiApp1.Products;
 using MauiApp1.Recipes;
 using MauiApp1.ViewerModels.Products;
 using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewerModels;
-
-public partial class DefinedInRecipeEditProduct : DefinedProductView, Ica
-{
-
-	public DefinedInRecipeEditProduct(string _productName)
-	{
-		ProductDefinition = FindProductDefinition(_productName);
-
-		DisplayName = GetName().Capitalize();
-		Count = 1;
-		MergeByDefault = true;
-	}
-
-	public DefinedInRecipeEditProduct(string _productName, int _count, bool _mergeByDefault)
-	{
-		ProductDefinition = FindProductDefinition(_productName);
-		Count = _count;
-		MergeByDefault = _mergeByDefault;
-
-		DisplayName = GetName().Capitalize();
-		Unit = ProductDefinition.Unit;
-	}
-
-	[ObservableProperty] public partial bool MergeByDefault { get; set; }
-
-	public void inc()
-	{
-		MergeByDefault = !MergeByDefault;
-	}
-
-	public RecipeProduct ToRecipeProduct()
-	{
-		return new RecipeProduct(GetName(), (byte)Count, MergeByDefault);
-	}
-}
-
-public partial class CustomInRecipeEditProduct : CustomProductView, Ica
-{
-
-	public CustomInRecipeEditProduct(string _productName)
-	{
-
-		ProductName = _productName;
-
-		DisplayName = GetName();
-		Count = 1;
-		MergeByDefault = true;
-	}
-
-
-	public CustomInRecipeEditProduct(string _productName, int _count, bool _mergeByDefault)
-	{
-
-		ProductName = _productName;
-
-		DisplayName = GetName();
-
-		Count = _count;
-
-		MergeByDefault = _mergeByDefault;
-	}
-
-	[ObservableProperty] public partial bool MergeByDefault { get; set; }
-
-	public void inc()
-	{
-		MergeByDefault = !MergeByDefault;
-	}
-
-	public RecipeProduct ToRecipeProduct()
-	{
-		return new RecipeProduct(GetName(), (byte)Count, MergeByDefault);
-	}
-}
-
-public interface Ica
-{
-	public void inc();
-	public RecipeProduct ToRecipeProduct();
-}
 
 public partial class EditSelectedRecipeViewModel : ObservableObject, IQueryAttributable
 {
@@ -107,112 +27,94 @@ public partial class EditSelectedRecipeViewModel : ObservableObject, IQueryAttri
 			selectedRecipeName = valuex as string ?? throw new Exception(nameof(selectedRecipeName));
 		}
 
-		SetRecipe();
+		LoadRecipe(InRecipeEditProducts);
 	}
 
 	[ObservableProperty] public partial string EnterNewProductName { get; set; }
-	[ObservableProperty] public partial ObservableCollection<ProductView> InRecipeEditProducts { get; set; } = new();
+	[ObservableProperty] public partial ObservableCollection<RecipeProduct> InRecipeEditProducts { get; set; } = new();
 
 	public SelectRecipeViewerModel selectRecipeViewerModel;
 
 	public string selectedRecipeName;
 
-	void SetRecipe()
-	{
-		InRecipeEditProducts = new();
-		sss(selectedRecipeName);
-
-	}
-
 
 	[RelayCommand]
 	private void Add()
 	{
-		ProductView inRecipeEditProduct = ChangeProductsListFromOutside.StandardProductAddition(InRecipeEditProducts, EnterNewProductName.ToLower());
 
-		int x = InRecipeEditProducts.IndexOf(inRecipeEditProduct);
+		InRecipeEditProducts.Add(new RecipeProduct(EnterNewProductName.ToLower())); //TO_DO trzeba to poprawic
 
-		if (inRecipeEditProduct is DefinedProductView)
-		{
-			InRecipeEditProducts[x] = new DefinedInRecipeEditProduct(EnterNewProductName.ToLower(), 1, true);
-		}
-		else if (inRecipeEditProduct is CustomProductView)
-		{
-			InRecipeEditProducts[x] = new CustomInRecipeEditProduct(EnterNewProductName.ToLower(), 1, true);
-		}
-		else
-			throw new Exception();
 
 		EnterNewProductName = string.Empty;
 	}
 
 	[RelayCommand]
-	private void Delete(ProductView product)
+	private void Delete(RecipeProduct product)
 	{
 		InRecipeEditProducts.Remove(product);
 	}
 	[RelayCommand]
-	private void Increment(ProductView product)
+	private void Increment(RecipeProduct product)
 	{
 		product.Increment();
 	}
 
 	[RelayCommand]
-	private void Decrement(ProductView product)
+	private void Decrement(RecipeProduct product)
 	{
 		product.Decrement();
 	}
 
 
 	[RelayCommand]
-	private void ChangeStatus(ProductView recipeProduct)
+	private void ChangeStatus(RecipeProduct recipeProduct)
 	{
 
-		if (recipeProduct is CustomInRecipeEditProduct)
-		{
-			CustomInRecipeEditProduct pr = (CustomInRecipeEditProduct)recipeProduct;
-			pr.inc();
-		}
-		else if (recipeProduct is DefinedInRecipeEditProduct)
-		{
-			DefinedInRecipeEditProduct ins = (DefinedInRecipeEditProduct)recipeProduct;
-			ins.inc();
-		}
+		recipeProduct.MergeByDefault = !recipeProduct.MergeByDefault;
 	}
 
 	[RelayCommand]
 	async Task GetPackedRecipe()
 	{
-		GetPackedRecipe(selectedRecipeName, InRecipeEditProducts);
+		SaveRecipe(InRecipeEditProducts);
 		await selectRecipeViewerModel.SaveRecipes();
 		await Shell.Current.GoToAsync("..");
 	}
 
-	void GetPackedRecipe(string name, ObservableCollection<ProductView> products)
+	void SaveRecipe(ObservableCollection<RecipeProduct> products)
 	{
 
-		Recipe recipe = selectRecipeViewerModel.RecipesList.First(r => r.Name == name);
+		Recipe recipe = selectRecipeViewerModel.RecipesList.First(r => r.Name == selectedRecipeName);
 
-		recipe.ProductsList = new();
+		recipe.ProductsList.Clear();
 		for (int i = 0; i < products.Count; i++)
 		{
-			recipe.ProductsList.Add(InRecipeProduct2RecipeProduct.Convert(products[i]));
+			recipe.ProductsList.Add(ConvertToPackedRecipeProduct(products[i]));
+		}
+
+		PackedRecipeProduct ConvertToPackedRecipeProduct(RecipeProduct recipeProduct)
+		{
+			return new PackedRecipeProduct(recipeProduct.Name, recipeProduct.Count, recipeProduct.MergeByDefault);
 		}
 	}
 
-	void sss(string name)
+
+	void LoadRecipe(ObservableCollection<RecipeProduct> products)
 	{
 
-		Recipe recipe = selectRecipeViewerModel.RecipesList.First(r => r.Name == name);
+		Recipe recipe = selectRecipeViewerModel.RecipesList.First(r => r.Name == selectedRecipeName);
 
+		products.Clear();
 
 		for (int i = 0; i < recipe.ProductsList.Count; i++)
 		{
-			ProductView pr = RecipeProduct2InRecipeProduct.Convert(recipe.ProductsList[i]);
+			PackedRecipeProduct packedRecipeProduct = recipe.ProductsList[i];
 
-			InRecipeEditProducts.Add(pr);
+			RecipeProduct newRecipeProduct = new RecipeProduct(packedRecipeProduct.Name, packedRecipeProduct.Count, packedRecipeProduct.MergeByDefault);
 
+			newRecipeProduct.MergeByDefault = packedRecipeProduct.MergeByDefault; //TO_DO ogarnac too/ nie dotykac potrzebne
 
+			products.Add(newRecipeProduct);
 		}
 
 	}

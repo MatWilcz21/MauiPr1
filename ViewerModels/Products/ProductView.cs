@@ -10,8 +10,6 @@ public abstract partial class ProductView : ObservableObject
 	[ObservableProperty] public partial Unit Unit { get; set; }
 	[ObservableProperty] public partial bool IsInCart { get; set; }
 	public abstract string GetName();
-
-	public abstract ProductView GetInRecipeEditProductX(ProductView productView);
 }
 public enum ProductClassEnum
 {

@@ -5,6 +5,7 @@
              Title="Home"
              xmlns:viewmodel="clr-namespace:MauiApp1.ViewerModels"
              xmlns:products="clr-namespace:MauiApp1.ViewerModels.Products"
+             xmlns:ppr ="clr-namespace:MauiApp1.Products"
              x:DataType="viewmodel:MainViewModel"
              >
 
@@ -35,7 +36,7 @@
                 <CollectionView.ItemTemplate>
 
 
-                    <DataTemplate x:DataType="products:ProductView">
+                    <DataTemplate x:DataType="ppr:MainListProduct">
 
                         <SwipeView >
                             <SwipeView.RightItems>
