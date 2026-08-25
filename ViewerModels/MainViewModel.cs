@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using MauiApp1.Pages;
 using MauiApp1.Products;
-using MauiApp1.ViewerModels.Products;
 using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewerModels;
