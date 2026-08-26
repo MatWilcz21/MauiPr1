@@ -56,12 +56,6 @@ public partial class SelectRecipeViewerModel : ObservableObject, IQueryAttributa
 	}
 
 	[RelayCommand]
-	async Task LongPress()
-	{
-		throw new NotImplementedException();
-	}
-
-	[RelayCommand]
 	async Task LoadRecipes()
 	{
 		RecipesList = await JsonHandler.LoadJson<ObservableCollection<Recipe>>("Recipes") ?? new();
