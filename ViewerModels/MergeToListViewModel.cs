@@ -35,7 +35,7 @@ public partial class MergeToListViewModel : ObservableObject, IQueryAttributable
 
 		float GetCurrentProductCount(string productName)
 		{
-			BaseProduct? productView = mainViewModel.Items.FirstOrDefault(p => p.Name == productName);
+			BaseProduct? productView = mainViewModel.MainProductsListClass.Products.FirstOrDefault(p => p.Name == productName);
 
 			if (productView is null) return 0;
 
@@ -88,11 +88,11 @@ class MergeHandler(MainViewModel mainViewModel, MergeToListViewModel mergeToList
 
 			if (!mergeProduct.Merge) continue;
 
-			mainViewModel.ChangeProductsListFromOutside.ForceSetProduct(mergeProduct.Name, mergeProduct.NewCount);
+			mainViewModel.MainProductsListClass.ChangeProductsListFromOutside.ForceSetProduct(mergeProduct.Name, mergeProduct.NewCount);
 
 		}
 
-		mainViewModel.ChangeProductsListFromOutside.SaveList();
+		mainViewModel.MainProductsListClass.ChangeProductsListFromOutside.SaveList();
 
 	}
 

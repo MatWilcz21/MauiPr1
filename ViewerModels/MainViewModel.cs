@@ -11,87 +11,27 @@ public partial class MainViewModel : ObservableObject
 
 	public MainViewModel()
 	{
-		Items = new();
-		ChangeProductsListFromOutside = new ChangeProductsListFromOutside(this);
-
-		Task.Run(() => ItemListUpdater.LoadListFromJson(this)).Wait();
-
 
 		Text = "";
-
+		MainProductsListClass = new MainProductsListClass(this);
 	}
 
-	[ObservableProperty] public partial ObservableCollection<MainListProduct> Items { get; set; } //TO_DO zmienić nazwę
+	[ObservableProperty] public partial MainProductsListClass MainProductsListClass { get; set; }
 
 	[ObservableProperty] public partial string Text { get; set; } //TO_DO zmienić nazwę
-
-	public ChangeProductsListFromOutside ChangeProductsListFromOutside { get; } = null!;
 
 	[RelayCommand]
 	void Add()
 	{
-
-		if (string.IsNullOrWhiteSpace(Text)) return;
-
-		Text = Text.ToLower();
-		Text = Text.Trim();
-
-		float productCount = 1; //TO_DO parsuj czy nie ma dopisanej ilosci produktu
-
-		ChangeProductsListFromOutside.StandardProductAddition(Items, Text, productCount);
-
+		MainProductsListClass.Add(Text);
 		Text = string.Empty;
-		ItemListUpdater.SaveListToJson(this);
 	}
 
 	[RelayCommand]
-	private void Delete(MainListProduct product)
+	async Task DeleteAll()
 	{
-		Items.Remove(product);
-		ItemListUpdater.SaveListToJson(this);
+		await MainProductsListClass.DeleteAll();
 	}
-
-	[RelayCommand]
-	private void DeleteAll(MainListProduct product)
-	{
-		Items = new();
-		ItemListUpdater.SaveListToJson(this);
-	}
-
-	[RelayCommand]
-	private void Increment(MainListProduct product)
-	{
-		product.Increment();
-		ItemListUpdater.SaveListToJson(this);
-	}
-
-
-	[RelayCommand]
-	private void Decrement(MainListProduct product)
-	{
-		product.Decrement();
-		ItemListUpdater.SaveListToJson(this);
-	}
-	[RelayCommand]
-	private void ChangeStatus(MainListProduct product)
-	{
-		product.IsInCart = !product.IsInCart;
-		ItemListUpdater.SaveListToJson(this);
-	}
-
-
-	/*[RelayCommand]
-	async Task SaveProduct(ProductView product)
-	{
-		var parameters = new Dictionary<string, object>
-		{
-			{ "Product", product },
-			{ "ProductList", Items }, //TO_DO po zmianie nazw dodać nameof()
-			{ nameof(MainViewModel), this}
-		};
-
-		await Shell.Current.GoToAsync(nameof(AddNewSavedProductPage), parameters);
-	}*/
 
 	[RelayCommand]
 	async Task GoToSelectRecipePage()
@@ -106,15 +46,138 @@ public partial class MainViewModel : ObservableObject
 	}
 }
 
+public partial class MainProductsListClass : ObservableObject
+{
+
+
+	public MainProductsListClass(MainViewModel _mainViewModel)
+	{
+
+		mainViewModel = _mainViewModel;
+
+		Products = new();
+		ChangeProductsListFromOutside = new ChangeProductsListFromOutside(this);
+
+		Task.Run(() => ItemListUpdater.LoadListFromJson(this)).Wait();
+	}
+
+
+	[ObservableProperty] public partial ObservableCollection<MainListProduct> Products { get; set; } //TO_DO zmienić nazwę
+	public ChangeProductsListFromOutside ChangeProductsListFromOutside { get; } = null!;
+
+	MainViewModel mainViewModel;
+
+	public void Add(string name)
+	{
+
+		if (string.IsNullOrWhiteSpace(name)) return;
+
+		name = name.ToLower();
+		name = name.Trim();
+
+		float productCount = 1; //TO_DO parsuj czy nie ma dopisanej ilosci produktu
+
+		ChangeProductsListFromOutside.StandardProductAddition(Products, name, productCount);
+		ItemListUpdater.SaveListToJson(this);
+	}
+
+	public async Task DeleteAll()
+	{
+
+		bool answer = await Shell.Current.DisplayAlert(
+		"Confirmation",
+		"Are you sure you want to delete all products?",
+		"Yes",
+		"No");
+
+		if (!answer)
+			return;
+
+		Products.Clear();
+		ItemListUpdater.SaveListToJson(this);
+	}
+
+	void SortProductsByStatus(MainListProduct product, bool toCart)
+	{
+
+		int lastOutOfCartProduct = Products.Count(e => e.IsInCart == false);
+
+		int currentIndex = Products.IndexOf(product);
+
+		if (!toCart)
+		{
+			//Products.Move(currentIndex, Math.Max(0, lastOutOfCartProduct - 1));
+			Products.Move(currentIndex, 0);
+			return;
+		}
+
+		Products.Move(currentIndex, lastOutOfCartProduct);
+
+	}
+
+	#region Commands
+
+	[RelayCommand]
+	private void Delete(MainListProduct product)
+	{
+		Products.Remove(product);
+		ItemListUpdater.SaveListToJson(this);
+	}
+
+	[RelayCommand]
+	private void Increment(MainListProduct product)
+	{
+		product.Increment();
+		ItemListUpdater.SaveListToJson(this);
+	}
+
+	[RelayCommand]
+	private async Task SetCustomCount(MainListProduct product)
+	{
+
+		string? result = await Shell.Current.DisplayPromptAsync(
+		"Enter custom value",
+		"Enter a number:",
+		"OK",
+		"Cancel",
+		keyboard: Keyboard.Numeric);
+
+		if (float.TryParse(result, out float value))
+			product.Count = value;
+
+
+		ItemListUpdater.SaveListToJson(this);
+	}
+
+	[RelayCommand]
+	private void Decrement(MainListProduct product)
+	{
+		product.Decrement();
+		ItemListUpdater.SaveListToJson(this);
+	}
+	[RelayCommand]
+	private void ChangeStatus(MainListProduct product)
+	{
+		product.IsInCart = !product.IsInCart;
+
+		SortProductsByStatus(product, product.IsInCart);
+
+		ItemListUpdater.SaveListToJson(this);
+	}
+
+	#endregion
+
+}
+
 public class ChangeProductsListFromOutside
 {
 
-	public ChangeProductsListFromOutside(MainViewModel _mainViewModel)
+	public ChangeProductsListFromOutside(MainProductsListClass _mainViewModel)
 	{
 		mainViewModel = _mainViewModel;
 	}
 
-	MainViewModel mainViewModel;
+	MainProductsListClass mainViewModel;
 
 	public void SaveList()
 	{
@@ -124,19 +187,16 @@ public class ChangeProductsListFromOutside
 	public void StandardProductAddition(ObservableCollection<MainListProduct> collection, string productName, float count)
 	{
 
-		MainListProduct newProductView = GetProductIfExistInList(mainViewModel.Items, productName);
+		MainListProduct newProductView = GetProductIfExistInList(mainViewModel.Products, productName);
 
 		if (newProductView is not null)
 		{
-			int existingProductOldID = mainViewModel.Items.IndexOf(newProductView!);
-			mainViewModel.Items.Move(existingProductOldID, 0);
+			int existingProductOldID = mainViewModel.Products.IndexOf(newProductView!);
+			mainViewModel.Products.Move(existingProductOldID, 0);
 			return;
 		}
 
-		mainViewModel.Items.Insert(0, new MainListProduct(productName, count));
-
-
-
+		mainViewModel.Products.Insert(0, new MainListProduct(productName, count));
 
 	}
 	MainListProduct GetProductIfExistInList(ObservableCollection<MainListProduct> products, string name)
@@ -147,12 +207,12 @@ public class ChangeProductsListFromOutside
 	public void ForceSetProduct(string productName, float productCount)
 	{
 
-		MainListProduct product = GetProductIfExistInList(mainViewModel.Items, productName);
+		MainListProduct product = GetProductIfExistInList(mainViewModel.Products, productName);
 
 		if (product is null)
 		{
 
-			StandardProductAddition(mainViewModel.Items, productName, productCount);
+			StandardProductAddition(mainViewModel.Products, productName, productCount);
 			return;
 		}
 
@@ -162,15 +222,15 @@ public class ChangeProductsListFromOutside
 
 static class ItemListUpdater
 {
-	public static void SaveListToJson(MainViewModel mainViewModel)
+	public static void SaveListToJson(MainProductsListClass mainViewModel)
 	{
 
-		Task.Run(() => JsonHandler.SaveJson(mainViewModel.Items, nameof(mainViewModel.Items))).Wait();
+		Task.Run(() => JsonHandler.SaveJson(mainViewModel.Products, nameof(mainViewModel.Products))).Wait();
 	}
 
-	public static async Task LoadListFromJson(MainViewModel mainViewModel)
+	public static async Task LoadListFromJson(MainProductsListClass mainViewModel)
 	{
 
-		mainViewModel.Items = await JsonHandler.LoadJson<ObservableCollection<MainListProduct>>(nameof(mainViewModel.Items)) ?? new();
+		mainViewModel.Products = await JsonHandler.LoadJson<ObservableCollection<MainListProduct>>(nameof(mainViewModel.Products)) ?? new();
 	}
 }

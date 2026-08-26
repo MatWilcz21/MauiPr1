@@ -11,7 +11,7 @@
 
 
 
-    <Grid RowDefinitions="Auto,*,Auto" Padding="10" RowSpacing="15">
+    <Grid RowDefinitions="Auto,*" Padding="10" RowSpacing="15">
 
         <Button Text="Merge" Command="{Binding MergeCommand}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
 
@@ -26,7 +26,7 @@
                         <SwipeView >
                             <SwipeView.LeftItems>
 
-                                <SwipeItem Text="Del"
+                                <SwipeItem Text="Merge"
                                BackgroundColor="Red"
                                Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeStatusCommand}"
                                CommandParameter="{Binding .}"/>
@@ -63,6 +63,21 @@
                                                 <Binding Path="NewCount"/>
                                             </MultiBinding>
                                         </Label.Text>
+
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label"
+                     Binding="{Binding Merge}"
+                     Value="False">
+                                                <Setter Property="Text">
+                                                    <Setter.Value>
+                                                        <MultiBinding StringFormat="{}{0} {1}">
+                                                            <Binding Path="Name"/>
+                                                            <Binding Path="OldCount"/>
+                                                        </MultiBinding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </Label.Triggers>
                                     </Label>
                                 </Grid>
                             </Border>
@@ -74,14 +89,5 @@
 
             </CollectionView>
         </ScrollView>
-
-        <Grid RowDefinitions="50" ColumnDefinitions=".50*, .50*" RowSpacing="10" ColumnSpacing="5" Grid.Row="2">
-
-            <Button Text="Edit products presets" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"/>
-            <Button CornerRadius="10" Text="X" Grid.Row="0" Grid.Column="1" BackgroundColor="Red"
-    Command="{Binding DeleteAllCommand}"/>
-
-        </Grid>
-
     </Grid>
 </ContentPage>

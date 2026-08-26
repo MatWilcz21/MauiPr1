@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp1.Pages.EditSelectedRecipePage"
-             Title="EditSelectedRecipePageX"
+             Title="{Binding selectedRecipeName, StringFormat='Recipe: {0}.'}"
              xmlns:mergeproduct="clr-namespace:MauiApp1.ViewerModels"
              xmlns:recipe="clr-namespace:MauiApp1.Recipes"
              xmlns:editrecipe ="clr-namespace:MauiApp1.ViewerModels"
@@ -111,8 +111,7 @@
 
         <Grid RowDefinitions="50" ColumnDefinitions=".50*, .50*" RowSpacing="10" ColumnSpacing="5" Grid.Row="2">
 
-            <Button Text="Edit products presets" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"/>
-            <Button CornerRadius="10" Text="X" Grid.Row="0" Grid.Column="1" BackgroundColor="Red"
+            <Button CornerRadius="10" Text="X" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Red"
                     Command="{Binding DeleteAllCommand}"/>
 
         </Grid>

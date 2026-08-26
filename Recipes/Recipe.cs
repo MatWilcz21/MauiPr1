@@ -6,10 +6,7 @@ namespace MauiApp1.Recipes;
 public partial class Recipe : ObservableObject
 {
 
-	public Recipe()
-	{
-
-	}
+	public Recipe() { }
 
 	public Recipe(string _name)
 	{

@@ -4,12 +4,9 @@
              x:Class="MauiApp1.MainPage"
              Title="Home"
              xmlns:viewmodel="clr-namespace:MauiApp1.ViewerModels"
-             xmlns:products="clr-namespace:MauiApp1.ViewerModels.Products"
              xmlns:ppr ="clr-namespace:MauiApp1.Products"
              x:DataType="viewmodel:MainViewModel"
              >
-
-    
 
 
     <Grid RowDefinitions="Auto,*,Auto" Padding="10" RowSpacing="15">
@@ -31,7 +28,7 @@
         </Grid>
 
         <ScrollView VerticalScrollBarVisibility="Never" Grid.Row="1">
-            <CollectionView ItemsSource="{Binding Items}">
+            <CollectionView ItemsSource="{Binding MainProductsListClass.Products}">
 
                 <CollectionView.ItemTemplate>
 
@@ -41,18 +38,18 @@
                         <SwipeView >
                             <SwipeView.RightItems>
 
-                                <SwipeItem Text="Del"
-                                   BackgroundColor="Red"
-                                   Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.DeleteCommand}"
-                                   CommandParameter="{Binding .}"/>
+                                <SwipeItem Text="Del" BackgroundColor="Red" Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
+                                    Path=BindingContext.MainProductsListClass.DeleteCommand}"
+                                    CommandParameter="{Binding .}"/>
 
                             </SwipeView.RightItems>
                             <SwipeView.LeftItems>
 
                                 <SwipeItem Text="Status"
-                                           BackgroundColor="Green"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeStatusCommand}"
-                                           CommandParameter="{Binding .}"/>
+                                BackgroundColor="Green"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
+                                                  Path=BindingContext.MainProductsListClass.ChangeStatusCommand}"
+                                CommandParameter="{Binding .}"/>
 
                             </SwipeView.LeftItems>
 
@@ -88,17 +85,26 @@
                                     </Label>
 
 
-                                    <Button CornerRadius="10" Text="Add" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" IsVisible="{Binding ShowAddToSavedProductsButton}"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.SaveProductCommand}"
-                                            CommandParameter="{Binding .}"/>
+                                    <Button Text="C"
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                            Grid.RowSpan="2"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
+                                                      Path=BindingContext.MainProductsListClass.SetCustomCountCommand}"
+                                    CommandParameter="{Binding .}"/>
 
-
-                                    <Button CornerRadius="10" Text="+" Grid.Row="0" Grid.Column="2" 
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.IncrementCommand}"
-                                            CommandParameter="{Binding .}"/>
-                                    <Button CornerRadius="10" Text="-" Grid.Row="1" Grid.Column="2"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.DecrementCommand}"
-                                            CommandParameter="{Binding .}"/>
+                                    <Button Text="+"
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
+                                                      Path=BindingContext.MainProductsListClass.IncrementCommand}"
+                                    CommandParameter="{Binding .}"/>
+                                    <Button Text="-"
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
+                                                      Path=BindingContext.MainProductsListClass.DecrementCommand}"
+                                    CommandParameter="{Binding .}"/>
                                 </Grid>
                             </Border>
                         </SwipeView>
@@ -112,7 +118,7 @@
 
         <Grid RowDefinitions="50" ColumnDefinitions=".50*, .50*" RowSpacing="10" ColumnSpacing="5" Grid.Row="2">
 
-            <Button Text="Edit products presets" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"/>
+            <Button Text="Friends" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"/>
             <Button CornerRadius="10" Text="X" Grid.Row="0" Grid.Column="1" BackgroundColor="Red"
         Command="{Binding DeleteAllCommand}"/>
 

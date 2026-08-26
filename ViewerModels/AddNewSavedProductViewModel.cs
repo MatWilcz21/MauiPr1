@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 
 namespace MauiApp1.ViewerModels;
 
@@ -18,7 +17,7 @@ public partial class AddNewSavedProductViewModel : ObservableObject, IQueryAttri
 		}
 	}
 
-	[RelayCommand]
+	/*[RelayCommand]
 	async Task SaveProduct()
 	{
 		ItemListUpdater.SaveListToJson(mainViewModel);
@@ -27,6 +26,6 @@ public partial class AddNewSavedProductViewModel : ObservableObject, IQueryAttri
 
 		await Shell.Current.GoToAsync("..");
 
-	}
+	}*/
 
 }

@@ -34,7 +34,7 @@ public partial class EditSelectedRecipeViewModel : ObservableObject, IQueryAttri
 
 	public SelectRecipeViewerModel selectRecipeViewerModel;
 
-	public string selectedRecipeName;
+	[ObservableProperty] public partial string selectedRecipeName { get; set; }
 
 
 	[RelayCommand]
@@ -51,6 +51,22 @@ public partial class EditSelectedRecipeViewModel : ObservableObject, IQueryAttri
 	private void Delete(RecipeProduct product)
 	{
 		InRecipeEditProducts.Remove(product);
+	}
+
+	[RelayCommand]
+	private async Task DeleteAll()
+	{
+
+		bool answer = await Shell.Current.DisplayAlert(
+		"Confirmation",
+		"Are you sure you want to delete all products?",
+		"Yes",
+		"No");
+
+		if (!answer)
+			return;
+
+		InRecipeEditProducts.Clear();
 	}
 	[RelayCommand]
 	private void Increment(RecipeProduct product)
