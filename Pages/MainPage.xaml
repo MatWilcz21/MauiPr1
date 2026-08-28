@@ -55,36 +55,51 @@
 
                             <Border StrokeShape="RoundRectangle 10"
                                     Padding="3">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        NumberOfTapsRequired="2"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
+                                                          Path=BindingContext.MainProductsListClass.ChangeNameCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
                                 <Border.Style>
                                     <Style TargetType="Border">
-                                        <Setter Property="BackgroundColor" Value="White"/>
 
-                                        <Style.Triggers>
-                                            <DataTrigger TargetType="Border"
-                             Binding="{Binding IsInCart}"
-                             Value="True">
-                                                <Setter Property="BackgroundColor" Value="#DDDDDD"/>
+                                        <!-- Normal color -->
+                                        <Setter Property="BackgroundColor"
+                                            Value="{AppThemeBinding
+                                                Light= {StaticResource MainBackgroundLight},
+                                                Dark= {StaticResource MainBackgroundDark}}" />
+
+                                            <Style.Triggers>
+
+                                                <DataTrigger TargetType="Border"
+                                                    Binding="{Binding IsInCart}"
+                                                    Value="True">
+
+                                                <!-- In cart color -->
+                                        <Setter Property="BackgroundColor"
+                                            Value="{AppThemeBinding
+                                                Light= {StaticResource InCartLight},
+                                                Dark= {StaticResource InCartDark}}" />
+
                                             </DataTrigger>
+
                                         </Style.Triggers>
+
                                     </Style>
                                 </Border.Style>
                                 <Grid Padding="0.5" RowDefinitions="40,40" ColumnDefinitions=".80*, .10*,.10*" RowSpacing="3" ColumnSpacing="3">
 
                                     <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalTextAlignment="Center" FontSize="30">
-
-
                                         <Label.Text>
-                                            <MultiBinding StringFormat="{}{0} {1}{2}.">
+                                            <MultiBinding StringFormat="{}{0} {1}{2}">
                                                 <Binding Path="DisplayName"/>
                                                 <Binding Path="Count"/>
                                                 <Binding Path="Unit.Name"/>
                                             </MultiBinding>
                                         </Label.Text>
-
-
                                     </Label>
-
-
                                     <Button Text="C"
                                     Grid.Row="0"
                                     Grid.Column="1"

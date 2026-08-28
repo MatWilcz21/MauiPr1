@@ -132,6 +132,13 @@ public partial class MainProductsListClass : ObservableObject
 	}
 
 	[RelayCommand]
+	private async Task ChangeName(MainListProduct product)
+	{
+		await product.ChangeName(Products);
+		ItemListUpdater.SaveListToJson(this);
+	}
+
+	[RelayCommand]
 	private async Task SetCustomCount(MainListProduct product)
 	{
 

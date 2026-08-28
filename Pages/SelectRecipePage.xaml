@@ -31,7 +31,7 @@
 
                     <DataTemplate x:DataType="recipes:Recipe">
 
-                        <SwipeView >
+                        <SwipeView>
                             <SwipeView.RightItems>
 
                                 <SwipeItem Text="Del"

@@ -6,6 +6,16 @@
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
 
+    <Color x:Key="MainBackgroundLight">#FFFFFF</Color>
+    <Color x:Key="MainBackgroundDark">#101010</Color>
+    
+    
+    <Color x:Key="InCartLight">#DDDDDD</Color>
+    <Color x:Key="InCartDark">#222222</Color>
+    <!-- 
+    <Color x:Key="OutOfCartLight">#00FFFF</Color>
+    <Color x:Key="OutOfCartDark">#00FFFF</Color>
+ -->
 
     <Color x:Key="ButtonBackgroundLight">#00FFFF</Color>
     <Color x:Key="ButtonBackgroundDark">#512BD4</Color>
@@ -14,7 +24,8 @@
     <Color x:Key="ButtonTextDark">#FFFFFF</Color>
 
     <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="PrimaryDark">#ac99ea</Color>
+    <Color x:Key="PrimaryDark">#512BD4</Color>
+    
     <Color x:Key="PrimaryDarkText">#242424</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>
     <Color x:Key="SecondaryDarkText">#9880e5</Color>

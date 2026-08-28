@@ -8,7 +8,6 @@ public partial class MergeProduct : BaseProduct
 	public MergeProduct(string _name, float _oldCount, float _newCount, bool _merge)
 	{
 		Name = _name;
-		DisplayName = _name.Capitalize();
 		OldCount = _oldCount;
 		NewCount = _newCount;
 		Merge = _merge;

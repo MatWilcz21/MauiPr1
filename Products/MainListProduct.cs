@@ -10,7 +10,6 @@ public partial class MainListProduct : BaseProduct
 	public MainListProduct(string _name, float _count)
 	{
 		Name = _name;
-		DisplayName = _name.Capitalize();
 		Count = _count;
 	}
 
