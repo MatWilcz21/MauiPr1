@@ -12,7 +12,6 @@ public partial class SelectRecipeViewerModel : ObservableObject, IQueryAttributa
 	public SelectRecipeViewerModel()
 	{
 		RecipesList = new();
-		mainViewModel = null!;
 	}
 
 	public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -32,11 +31,11 @@ public partial class SelectRecipeViewerModel : ObservableObject, IQueryAttributa
 		}
 	}
 
-	[ObservableProperty] public partial string EnterNewRecipeName { get; set; }
+	[ObservableProperty] public partial string EnterNewRecipeName { get; set; } = null!;
 
 	[ObservableProperty] public partial ObservableCollection<Recipe> RecipesList { get; set; }
 
-	MainViewModel mainViewModel;
+	MainViewModel mainViewModel = null!;
 
 	[RelayCommand]
 	async Task AddNewRecipe()

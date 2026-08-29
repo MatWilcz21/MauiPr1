@@ -21,20 +21,20 @@ public partial class EditSelectedRecipeViewModel : ObservableObject, IQueryAttri
 			selectRecipeViewerModel = value as SelectRecipeViewerModel ?? throw new Exception(nameof(SelectRecipeViewerModel));
 		}
 
-		if (query.TryGetValue("selectedRecipeName", out var valuex))
+		if (query.TryGetValue("selectedRecipeName", out var value1))
 		{
-			selectedRecipeName = valuex as string ?? throw new Exception(nameof(selectedRecipeName));
+			selectedRecipeName = value1 as string ?? throw new Exception(nameof(selectedRecipeName));
 		}
 
 		LoadRecipe(InRecipeEditProducts);
 	}
 
-	[ObservableProperty] public partial string EnterNewProductName { get; set; }
+	[ObservableProperty] public partial string EnterNewProductName { get; set; } = null!;
 	[ObservableProperty] public partial ObservableCollection<RecipeProduct> InRecipeEditProducts { get; set; } = new();
 
-	public SelectRecipeViewerModel selectRecipeViewerModel;
+	public SelectRecipeViewerModel selectRecipeViewerModel = null!;
 
-	[ObservableProperty] public partial string selectedRecipeName { get; set; }
+	[ObservableProperty] public partial string selectedRecipeName { get; set; } = null!;
 
 
 	[RelayCommand]
