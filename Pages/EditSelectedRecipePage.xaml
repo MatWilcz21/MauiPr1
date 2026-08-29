@@ -38,7 +38,7 @@
 
                     <DataTemplate x:DataType="products:RecipeProduct">
 
-                        <SwipeView >
+                        <SwipeView Threshold="100">
                             <SwipeView.RightItems>
 
                                 <SwipeItem Text="Del"
@@ -48,16 +48,23 @@
 
                             </SwipeView.RightItems>
                             <SwipeView.LeftItems>
-
-                                <SwipeItem Text="Status"
+                                <SwipeItems Mode="Execute">
+                                    <SwipeItem Text="Status"
                                        BackgroundColor="Green"
                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeStatusCommand}"
                                        CommandParameter="{Binding .}"/>
-
+                                </SwipeItems>
                             </SwipeView.LeftItems>
 
                             <Border StrokeShape="RoundRectangle 10"
                                 Padding="3">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+        NumberOfTapsRequired="2"
+        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
+                          Path=BindingContext.ChangeNameCommand}"
+        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Setter Property="BackgroundColor" Value="Red"/>

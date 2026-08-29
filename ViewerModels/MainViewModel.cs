@@ -67,6 +67,7 @@ public partial class MainProductsListClass : ObservableObject
 
 	MainViewModel mainViewModel;
 
+
 	public void Add(string name)
 	{
 

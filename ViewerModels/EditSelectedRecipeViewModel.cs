@@ -75,6 +75,12 @@ public partial class EditSelectedRecipeViewModel : ObservableObject, IQueryAttri
 	}
 
 	[RelayCommand]
+	private async Task ChangeName(RecipeProduct product)
+	{
+		await product.ChangeName(InRecipeEditProducts);
+	}
+
+	[RelayCommand]
 	private void Decrement(RecipeProduct product)
 	{
 		product.Decrement();

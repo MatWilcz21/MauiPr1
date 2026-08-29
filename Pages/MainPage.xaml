@@ -23,7 +23,7 @@
                    Grid.ColumnSpan="1"/>
             <Button Text="Add product" Command="{Binding AddCommand}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1"/>
 
-            <Button Text="Update" Command="{Binding AddCommand}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Button Text="Update" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Gray"/>
 
         </Grid>
 
@@ -35,7 +35,7 @@
 
                     <DataTemplate x:DataType="ppr:MainListProduct">
 
-                        <SwipeView >
+                        <SwipeView Threshold="100">
                             <SwipeView.RightItems>
 
                                 <SwipeItem Text="Del" BackgroundColor="Red" Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
@@ -45,12 +45,14 @@
                             </SwipeView.RightItems>
                             <SwipeView.LeftItems>
 
-                                <SwipeItem Text="Status"
+                                <SwipeItems Mode="Execute">
+
+                                    <SwipeItem Text="Status"
                                 BackgroundColor="Green"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
                                                   Path=BindingContext.MainProductsListClass.ChangeStatusCommand}"
                                 CommandParameter="{Binding .}"/>
-
+                                </SwipeItems>
                             </SwipeView.LeftItems>
 
                             <Border StrokeShape="RoundRectangle 10"
@@ -133,7 +135,7 @@
 
         <Grid RowDefinitions="50" ColumnDefinitions=".50*, .50*" RowSpacing="10" ColumnSpacing="5" Grid.Row="2">
 
-            <Button Text="Friends" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"/>
+            <Button Text="Friends" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" BackgroundColor="Gray"/>
             <Button CornerRadius="10" Text="X" Grid.Row="0" Grid.Column="1" BackgroundColor="Red"
         Command="{Binding DeleteAllCommand}"/>
 

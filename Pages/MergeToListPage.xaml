@@ -23,14 +23,14 @@
 
                     <DataTemplate x:DataType="products:MergeProduct">
 
-                        <SwipeView >
+                        <SwipeView Threshold="100">
                             <SwipeView.LeftItems>
-
-                                <SwipeItem Text="Merge"
+                                <SwipeItems Mode="Execute">
+                                    <SwipeItem Text="Merge"
                                BackgroundColor="Red"
                                Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeStatusCommand}"
                                CommandParameter="{Binding .}"/>
-
+                                </SwipeItems>
                             </SwipeView.LeftItems>
 
                             <Border StrokeShape="RoundRectangle 10"
