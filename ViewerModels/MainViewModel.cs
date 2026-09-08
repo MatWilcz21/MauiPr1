@@ -12,19 +12,18 @@ public partial class MainViewModel : ObservableObject
 	public MainViewModel()
 	{
 
-		Text = "";
 		MainProductsListClass = new MainProductsListClass(this);
 	}
 
 	[ObservableProperty] public partial MainProductsListClass MainProductsListClass { get; set; }
 
-	[ObservableProperty] public partial string Text { get; set; } //TO_DO zmienić nazwę
+	[ObservableProperty] public partial string NewProductNameEntry { get; set; } = string.Empty;
 
 	[RelayCommand]
 	void Add()
 	{
-		MainProductsListClass.Add(Text);
-		Text = string.Empty;
+		MainProductsListClass.Add(NewProductNameEntry);
+		NewProductNameEntry = string.Empty;
 	}
 
 	[RelayCommand]
@@ -62,7 +61,7 @@ public partial class MainProductsListClass : ObservableObject
 	}
 
 
-	[ObservableProperty] public partial ObservableCollection<MainListProduct> Products { get; set; } //TO_DO zmienić nazwę
+	[ObservableProperty] public partial ObservableCollection<MainListProduct> Products { get; set; }
 	public ChangeProductsListFromOutside ChangeProductsListFromOutside { get; } = null!;
 
 	MainViewModel mainViewModel;
@@ -71,14 +70,11 @@ public partial class MainProductsListClass : ObservableObject
 	public void Add(string name)
 	{
 
-		if (string.IsNullOrWhiteSpace(name)) return;
-
-		name = name.ToLower();
-		name = name.Trim();
+		if (!BaseProduct.GetTrimmedProductNameIfValidString(out string trimmedName, name)) return;
 
 		float productCount = 1; //TO_DO parsuj czy nie ma dopisanej ilosci produktu
 
-		ChangeProductsListFromOutside.StandardProductAddition(Products, name, productCount);
+		ChangeProductsListFromOutside.StandardProductAddition(Products, trimmedName, productCount);
 		ItemListUpdater.SaveListToJson(this);
 	}
 

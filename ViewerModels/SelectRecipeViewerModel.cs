@@ -21,14 +21,8 @@ public partial class SelectRecipeViewerModel : ObservableObject, IQueryAttributa
 			mainViewModel = value as MainViewModel ?? throw new Exception(nameof(MainViewModel));
 		}
 
-		try
-		{
-			Task.Run(() => LoadRecipes().Wait());
-		}
-		catch
-		{
-			//TO_DO trzeba to ogarnąć
-		}
+		Task.Run(() => LoadRecipes().Wait());
+
 	}
 
 	[ObservableProperty] public partial string EnterNewRecipeName { get; set; } = null!;
@@ -49,9 +43,10 @@ public partial class SelectRecipeViewerModel : ObservableObject, IQueryAttributa
 	}
 
 	[RelayCommand]
-	private void Delete(Recipe recipe)
+	private async Task Delete(Recipe recipe)
 	{
 		RecipesList.Remove(recipe);
+		await SaveRecipes();
 	}
 
 	[RelayCommand]

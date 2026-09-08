@@ -22,6 +22,17 @@ public abstract partial class BaseProduct : ObservableObject
 	public string DisplayName => Name.Capitalize();
 	[ObservableProperty] public partial Unit Unit { get; set; }
 
+	public static bool GetTrimmedProductNameIfValidString(out string r, string s)
+	{
+		r = s;
+
+		if (string.IsNullOrWhiteSpace(s)) return false;
+
+		r = s.ToLower();
+		r = r.Trim();
+		return true;
+	}
+
 
 }
 public static class BaseProductExtensionMethods
@@ -52,19 +63,11 @@ public static class BaseProductExtensionMethods
 		"Cancel",
 		product.Name.Capitalize());
 
-		if (string.IsNullOrWhiteSpace(NewName)) return;
+		if (!BaseProduct.GetTrimmedProductNameIfValidString(out string newTrimmedName, NewName)) return;
 
-		NewName = NewName.GetTrimmedProductName();
 
-		if (products.FirstOrDefault(e => e.Name == NewName) is not null) return;
+		if (products.FirstOrDefault(e => e.Name == newTrimmedName) is not null) return;
 
-		product.Name = NewName;
-	}
-
-	public static string GetTrimmedProductName(this string s)
-	{
-		s = s.ToLower();
-		s = s.Trim();
-		return s;
+		product.Name = newTrimmedName;
 	}
 }

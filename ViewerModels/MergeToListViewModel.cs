@@ -55,23 +55,13 @@ public partial class MergeToListViewModel : ObservableObject, IQueryAttributable
 	[RelayCommand]
 	private void ChangeStatus(MergeProduct mergeProduct)
 	{
-
 		mergeProduct.Merge = !mergeProduct.Merge;
 	}
 
 	[RelayCommand]
 	async Task Merge()
 	{
-
 		mergeHandler.CreateMerge();
-
-
-		/*var parameters = new Dictionary<string, object>
-		{
-			{ nameof(MainViewModel), this },
-		};*/
-
-		//await Shell.Current.GoToAsync(nameof(SelectRecipePage), parameters);
 		await Shell.Current.GoToAsync("../..");
 	}
 

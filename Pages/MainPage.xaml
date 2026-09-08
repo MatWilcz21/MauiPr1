@@ -15,7 +15,7 @@
 
             <Button Text="Add products from preset" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Command="{Binding GoToSelectRecipePageCommand}"/>
             <Entry Placeholder="Add product"
-                   Text="{Binding Text}"
+                   Text="{Binding NewProductNameEntry}"
                    ReturnType="Done"
                    ReturnCommand="{Binding AddCommand}"
                    Grid.Row="1"
