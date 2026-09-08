@@ -42,6 +42,23 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningKeyAlias>apk0</AndroidSigningKeyAlias>
+	  <AndroidSigningStorePass>mATI21042_</AndroidSigningStorePass>
+	  <AndroidSigningKeyPass>mATI21042_</AndroidSigningKeyPass>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
+	  <AndroidSigningKeyAlias>apk0</AndroidSigningKeyAlias>
+	  <AndroidSigningStorePass>mATI21042_</AndroidSigningStorePass>
+	  <AndroidSigningKeyPass>mATI21042_</AndroidSigningKeyPass>
+	  <AndroidUseAapt2>True</AndroidUseAapt2>
+	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
