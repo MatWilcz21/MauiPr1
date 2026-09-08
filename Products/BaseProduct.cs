@@ -7,7 +7,7 @@ public abstract partial class BaseProduct : ObservableObject
 
 	[ObservableProperty] public partial float Count { get; set; }
 
-	private string name = "";
+	private string name = null!;
 
 	public string Name
 	{
