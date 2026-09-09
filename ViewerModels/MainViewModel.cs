@@ -1,17 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiApp1.Communication;
+using MauiApp1.Communication.SMS;
 using MauiApp1.Pages;
 using MauiApp1.Products;
 using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewerModels;
-
+//TO_DO przeniesc apk sign z C:\Users\Mat_Wilcz
 public partial class MainViewModel : ObservableObject
 {
 
 	public MainViewModel()
 	{
-
+		new CommunicationTest();
 		MainProductsListClass = new MainProductsListClass(this);
 	}
 
@@ -30,6 +32,12 @@ public partial class MainViewModel : ObservableObject
 	async Task DeleteAll()
 	{
 		await MainProductsListClass.DeleteAll();
+	}
+
+	[RelayCommand]
+	async Task Update()
+	{
+		await MainProductsListClass.Update();
 	}
 
 	[RelayCommand]
@@ -66,7 +74,6 @@ public partial class MainProductsListClass : ObservableObject
 
 	MainViewModel mainViewModel;
 
-
 	public void Add(string name)
 	{
 
@@ -76,6 +83,16 @@ public partial class MainProductsListClass : ObservableObject
 
 		ChangeProductsListFromOutside.StandardProductAddition(Products, trimmedName, productCount);
 		ItemListUpdater.SaveListToJson(this);
+	}
+
+	public async Task Update()
+	{
+
+		SendSMS sendSMS = new SendSMS(this);
+
+
+
+		await sendSMS.Send(/*"537870143"*/ "515623758", Products);
 	}
 
 	public async Task DeleteAll()
@@ -238,3 +255,4 @@ static class ItemListUpdater
 		mainViewModel.Products = await JsonHandler.LoadJson<ObservableCollection<MainListProduct>>(nameof(mainViewModel.Products)) ?? new();
 	}
 }
+

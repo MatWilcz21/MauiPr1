@@ -20,7 +20,7 @@ public abstract partial class BaseProduct : ObservableObject
 	}
 
 	public string DisplayName => Name.Capitalize();
-	[ObservableProperty] public partial Unit Unit { get; set; }
+	[ObservableProperty] public partial string Unit { get; set; }
 
 	public static bool GetTrimmedProductNameIfValidString(out string r, string s)
 	{

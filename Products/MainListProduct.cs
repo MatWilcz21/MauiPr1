@@ -11,6 +11,14 @@ public partial class MainListProduct : BaseProduct
 	{
 		Name = _name;
 		Count = _count;
+		Unit = "Szt";
+	}
+
+	public MainListProduct(string _name, float _count, string _unit)
+	{
+		Name = _name;
+		Count = _count;
+		Unit = _unit;
 	}
 
 	[ObservableProperty] public partial bool IsInCart { get; set; }

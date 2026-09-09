@@ -23,7 +23,7 @@
                    Grid.ColumnSpan="1"/>
             <Button Text="Add product" Command="{Binding AddCommand}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1"/>
 
-            <Button Text="Update" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Gray"/>
+            <Button Text="Update" Command="{Binding UpdateCommand}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Gray"/>
 
         </Grid>
 
@@ -57,33 +57,29 @@
 
                             <Border StrokeShape="RoundRectangle 10"
                                     Padding="3">
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        NumberOfTapsRequired="2"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
-                                                          Path=BindingContext.MainProductsListClass.ChangeNameCommand}"
-                                        CommandParameter="{Binding .}" />
-                                </Border.GestureRecognizers>
+
+
+
                                 <Border.Style>
                                     <Style TargetType="Border">
 
-                                        <!-- Normal color -->
+
                                         <Setter Property="BackgroundColor"
-                                            Value="{AppThemeBinding
-                                                Light= {StaticResource MainBackgroundLight},
-                                                Dark= {StaticResource MainBackgroundDark}}" />
+            Value="{AppThemeBinding
+                Light= {StaticResource MainBackgroundLight},
+                Dark= {StaticResource MainBackgroundDark}}" />
 
-                                            <Style.Triggers>
+                                        <Style.Triggers>
 
-                                                <DataTrigger TargetType="Border"
-                                                    Binding="{Binding IsInCart}"
-                                                    Value="True">
+                                            <DataTrigger TargetType="Border"
+                    Binding="{Binding IsInCart}"
+                    Value="True">
 
-                                                <!-- In cart color -->
-                                        <Setter Property="BackgroundColor"
-                                            Value="{AppThemeBinding
-                                                Light= {StaticResource InCartLight},
-                                                Dark= {StaticResource InCartDark}}" />
+
+                                                <Setter Property="BackgroundColor"
+            Value="{AppThemeBinding
+                Light= {StaticResource InCartLight},
+                Dark= {StaticResource InCartDark}}" />
 
                                             </DataTrigger>
 
@@ -91,14 +87,50 @@
 
                                     </Style>
                                 </Border.Style>
+
+
+
+
+
+
+
+                                <Border.Stroke>
+                                    <LinearGradientBrush
+                            StartPoint="0,0"
+                            EndPoint="1,0">
+
+                                        <GradientStop
+                                Color="#FF0080"
+                                Offset="0.0" />
+
+                                        <GradientStop
+                                Color="#7928CA"
+                                Offset="0.5" />
+
+                                        <GradientStop
+                                Color="#00D4FF"
+                                Offset="1.0" />
+
+                                    </LinearGradientBrush>
+                                </Border.Stroke>
+
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        NumberOfTapsRequired="2"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
+                                                          Path=BindingContext.MainProductsListClass.ChangeNameCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                
                                 <Grid Padding="0.5" RowDefinitions="40,40" ColumnDefinitions=".80*, .10*,.10*" RowSpacing="3" ColumnSpacing="3">
 
-                                    <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalTextAlignment="Center" FontSize="30">
+                                    <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalTextAlignment="Center" FontSize="30" Padding="3">
                                         <Label.Text>
-                                            <MultiBinding StringFormat="{}{0} {1}{2}">
+                                            <MultiBinding StringFormat="{}{0} {1} {2}">
                                                 <Binding Path="DisplayName"/>
                                                 <Binding Path="Count"/>
-                                                <Binding Path="Unit.Name"/>
+                                                <Binding Path="Unit"/>
                                             </MultiBinding>
                                         </Label.Text>
                                     </Label>
@@ -135,12 +167,60 @@
 
         <Grid RowDefinitions="50" ColumnDefinitions=".50*, .50*" RowSpacing="10" ColumnSpacing="5" Grid.Row="2">
 
-            <Button Text="Friends" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" BackgroundColor="Gray"/>
-            <Button CornerRadius="10" Text="X" Grid.Row="0" Grid.Column="1" BackgroundColor="Red"
-        Command="{Binding DeleteAllCommand}"/>
+            <Border Style="{StaticResource ProductBorderStyle}">
 
+
+                <Button
+        Text="Kliknij mnie"
+        Background="Transparent"
+        TextColor="White"
+        CornerRadius="8" />
+
+            </Border>
+
+            <Border Grid.Row="0" Grid.Column="1" StrokeShape="RoundRectangle 10" StrokeThickness="2">
+                <Border.Stroke>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#000000" Offset="0" />
+                        <GradientStop Color="#500000" Offset="0.5" />
+                        <GradientStop Color="#FF0000" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Stroke>
+
+                <Button CornerRadius="8" Text="X" BackgroundColor="Transparent" TextColor="White"
+        Command="{Binding DeleteAllCommand}"/>
+            </Border>
         </Grid>
 
     </Grid>
 
 </ContentPage>
+
+
+<!-- <Border.Style>
+    <Style TargetType="Border">
+
+
+        <Setter Property="BackgroundColor"
+            Value="{AppThemeBinding
+                Light= {StaticResource MainBackgroundLight},
+                Dark= {StaticResource MainBackgroundDark}}" />
+
+            <Style.Triggers>
+
+                <DataTrigger TargetType="Border"
+                    Binding="{Binding IsInCart}"
+                    Value="True">
+
+
+        <Setter Property="BackgroundColor"
+            Value="{AppThemeBinding
+                Light= {StaticResource InCartLight},
+                Dark= {StaticResource InCartDark}}" />
+
+            </DataTrigger>
+
+        </Style.Triggers>
+
+    </Style>
+</Border.Style> -->
