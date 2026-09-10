@@ -1,6 +1,6 @@
 ﻿using MauiApp1.Communication.SMS.Android;
 using MauiApp1.Products;
-using MauiApp1.ViewerModels;
+using MauiApp1.Products.MainProductsList;
 using System.Collections.ObjectModel;
 
 namespace MauiApp1.Communication.SMS;

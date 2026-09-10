@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MauiApp1.Products;
+using MauiApp1.Products.MainProductsList;
 using MauiApp1.Recipes;
 using System.Collections.ObjectModel;
 
@@ -78,12 +79,10 @@ class MergeHandler(MainViewModel mainViewModel, MergeToListViewModel mergeToList
 
 			if (!mergeProduct.Merge) continue;
 
-			mainViewModel.MainProductsListClass.ChangeProductsListFromOutside.ForceSetProduct(mergeProduct.Name, mergeProduct.NewCount);
+			mainViewModel.MainProductsListClass.Products.AddProductToList(mergeProduct.Name, mergeProduct.NewCount, mainViewModel.MainProductsListClass);
 
 		}
-
 		mainViewModel.MainProductsListClass.SaveList();
-
 	}
 
 }

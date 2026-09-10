@@ -1,4 +1,5 @@
 ﻿using MauiApp1.Products;
+using MauiApp1.Products.MainProductsList;
 using MauiApp1.ViewerModels;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -37,9 +38,7 @@ public static class ReceiveListUpdate
 
 interface IUpdateList
 {
-
 	public void Update(List<string> dataToUpdateList, IEnumerable targetList);
-
 }
 
 
@@ -60,55 +59,24 @@ class UpdateMainList : IUpdateList
 
 		Merge();
 
-
-		mainProductsListClass.SaveList();
-
 		void Merge()
 		{
 
-			for (int i = 0; i < dataToUpdateList.Count; i++)
+			for (int i = dataToUpdateList.Count - 1; i >= 0; i--)
 			{
 				string[] values = dataToUpdateList[i].Replace("\"", "").Split(' ');
 
-				string productName = values[0];
+				string productName = values[0].ToLower();
 				float productCount = float.Parse(values[1]);
 				string productUnit = values[2];
 
-				MainListProduct product = mainLists!.FirstOrDefault(p => p.Name.ToLower() == productName.ToLower())!;
+				mainLists!.AddProductToList(productName, productCount, mainProductsListClass);
 
-				if (product is null)
-				{
-					mainLists!.Add(new Products.MainListProduct(productName, productCount, productUnit));
-					continue;
-				}
 
-				if (product.Count == productCount) continue;
-
-				product.Count = productCount;
-				product.Unit = productUnit;
-
-				product.IsInCart = false;
-
-				if (mainProductsListClass is null) continue;
-				mainProductsListClass.SortProductsByStatus(product, product.IsInCart);
 			}
-		}
 
-		void Replace()
-		{
-			mainLists.Clear();
-			for (int i = 0; i < dataToUpdateList.Count; i++)
-			{
-				string[] values = dataToUpdateList[i].Replace("\"", "").Split(' ');
-
-				string productName = values[0];
-				string productCount = values[1];
-				string productUnit = values[2];
-
-				mainLists.Add(new Products.MainListProduct(productName, float.Parse(productCount), productUnit));
-			}
+			mainProductsListClass.SaveList();
 		}
 	}
-
 
 }
