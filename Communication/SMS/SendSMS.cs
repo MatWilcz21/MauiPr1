@@ -46,5 +46,4 @@ class SendSMS
 public interface IProductListDelivery
 {
 	public Task Send(string phoneNumber, string message);
-	public Task Receive();
 }

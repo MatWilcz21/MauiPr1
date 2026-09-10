@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MauiApp1.Communication;
+using MauiApp1.Communication.Contacts;
 using MauiApp1.Communication.SMS;
+using MauiApp1.Communication.SMS.Android;
 using MauiApp1.Pages;
 using MauiApp1.Products;
 using System.Collections.ObjectModel;
@@ -15,6 +17,7 @@ public partial class MainViewModel : ObservableObject
 	{
 		new CommunicationTest();
 		MainProductsListClass = new MainProductsListClass(this);
+		ReceiveListUpdate.ST(this);
 	}
 
 	[ObservableProperty] public partial MainProductsListClass MainProductsListClass { get; set; }
@@ -64,10 +67,14 @@ public partial class MainProductsListClass : ObservableObject
 
 		Products = new();
 		ChangeProductsListFromOutside = new ChangeProductsListFromOutside(this);
+		receiveSMS = new ReceiveSMS(mainViewModel);
 
 		Task.Run(() => ItemListUpdater.LoadListFromJson(this)).Wait();
+
+		ReceiveListUpdate.AddThisList(Products);
 	}
 
+	ReceiveSMS receiveSMS;
 
 	[ObservableProperty] public partial ObservableCollection<MainListProduct> Products { get; set; }
 	public ChangeProductsListFromOutside ChangeProductsListFromOutside { get; } = null!;
@@ -92,7 +99,7 @@ public partial class MainProductsListClass : ObservableObject
 
 
 
-		await sendSMS.Send(/*"537870143"*/ "515623758", Products);
+		await sendSMS.Send("537870143" /*"515623758"*/, Products);
 	}
 
 	public async Task DeleteAll()
@@ -111,7 +118,7 @@ public partial class MainProductsListClass : ObservableObject
 		ItemListUpdater.SaveListToJson(this);
 	}
 
-	void SortProductsByStatus(MainListProduct product, bool toCart)
+	public void SortProductsByStatus(MainListProduct product, bool toCart)
 	{
 
 		int lastOutOfCartProduct = Products.Count(e => e.IsInCart == false);
@@ -131,25 +138,30 @@ public partial class MainProductsListClass : ObservableObject
 
 	#region Commands
 
+	public void SaveList()
+	{
+		ItemListUpdater.SaveListToJson(this);
+	}
+
 	[RelayCommand]
 	private void Delete(MainListProduct product)
 	{
 		Products.Remove(product);
-		ItemListUpdater.SaveListToJson(this);
+
 	}
 
 	[RelayCommand]
 	private void Increment(MainListProduct product)
 	{
 		product.Increment();
-		ItemListUpdater.SaveListToJson(this);
+		SaveList();
 	}
 
 	[RelayCommand]
 	private async Task ChangeName(MainListProduct product)
 	{
 		await product.ChangeName(Products);
-		ItemListUpdater.SaveListToJson(this);
+		SaveList();
 	}
 
 	[RelayCommand]
@@ -167,14 +179,14 @@ public partial class MainProductsListClass : ObservableObject
 			product.Count = value;
 
 
-		ItemListUpdater.SaveListToJson(this);
+		SaveList();
 	}
 
 	[RelayCommand]
 	private void Decrement(MainListProduct product)
 	{
 		product.Decrement();
-		ItemListUpdater.SaveListToJson(this);
+		SaveList();
 	}
 	[RelayCommand]
 	private void ChangeStatus(MainListProduct product)
@@ -183,7 +195,7 @@ public partial class MainProductsListClass : ObservableObject
 
 		SortProductsByStatus(product, product.IsInCart);
 
-		ItemListUpdater.SaveListToJson(this);
+		SaveList();
 	}
 
 	#endregion
@@ -199,11 +211,6 @@ public class ChangeProductsListFromOutside
 	}
 
 	MainProductsListClass mainViewModel;
-
-	public void SaveList()
-	{
-		ItemListUpdater.SaveListToJson(mainViewModel);
-	}
 
 	public void StandardProductAddition(ObservableCollection<MainListProduct> collection, string productName, float count)
 	{

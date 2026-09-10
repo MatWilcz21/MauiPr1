@@ -82,7 +82,7 @@ class MergeHandler(MainViewModel mainViewModel, MergeToListViewModel mergeToList
 
 		}
 
-		mainViewModel.MainProductsListClass.ChangeProductsListFromOutside.SaveList();
+		mainViewModel.MainProductsListClass.SaveList();
 
 	}
 

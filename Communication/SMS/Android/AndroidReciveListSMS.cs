@@ -1,8 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using MauiApp1.ViewerModels;
-
-
-#if ANDROID
+﻿#if ANDROID
 using Android.App;
 using Android.Content;
 using Android.Provider;
@@ -32,24 +28,8 @@ class AndroidReciveListSMS : BroadcastReceiver
 			string? sender = sms.OriginatingAddress;
 			string? message = sms.MessageBody;
 
-			List<string> results = Regex.Matches(message, @"<([^>]*)>").Select(m => m.Groups[1].Value).ToList();
-
-			MainProductsListClass mainProductsListClass =
-			MauiApplication.Current.Services.GetService<MainViewModel>().MainProductsListClass; //TO_DO to do ogarniecia
-
-			mainProductsListClass.Products.Clear();
-			for (int i = 0; i < results.Count; i++)
-			{
-				string[] values = results[i]
-	.Replace("\"", "")
-	.Split(' ');
-
-				string a = values[0];
-				string b = values[1];
-				string c = values[2];
-
-				mainProductsListClass.Products.Add(new Products.MainListProduct(a, float.Parse(b), c));
-			}
+			ReceiveSMS.ProcessReceivedSmsMessage(message);
+			
 		}
 	}
 }

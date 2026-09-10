@@ -7,11 +7,6 @@ namespace MauiApp1.Communication.SMS.Android;
 class AndroidSendListSMS : IProductListDelivery
 {
 
-	public async Task Receive()
-	{
-		throw new NotImplementedException();
-	}
-
 	public async Task Send(string phoneNumber, string message)
 	{
 #if ANDROID
@@ -49,7 +44,7 @@ class AndroidSendListSMS : IProductListDelivery
 
 #else
 
-        await Task.CompletedTask;
+		await Task.CompletedTask;
 
 #endif
 	}
