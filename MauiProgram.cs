@@ -32,6 +32,9 @@ public static class MauiProgram
 		builder.Services.AddSingleton<EditSelectedRecipePage>();
 		builder.Services.AddSingleton<EditSelectedRecipeViewModel>();
 
+		builder.Services.AddSingleton<SelectListReceiverPage>();
+		builder.Services.AddSingleton<SelectListReceiverViewModel>();
+
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif

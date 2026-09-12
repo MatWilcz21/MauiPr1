@@ -16,12 +16,14 @@ public partial class MainViewModel : ObservableObject
 	{
 		new CommunicationTest();
 		MainProductsListClass = new MainProductsListClass(this);
-		ReceiveListUpdate.ST(this);
+		ContactsLogicClass = new ContactsLogic();
+		ReceiveListUpdate.SendMainViewModel(this);
 	}
 
 	[ObservableProperty] public partial MainProductsListClass MainProductsListClass { get; set; }
-
 	[ObservableProperty] public partial string NewProductNameEntry { get; set; } = string.Empty;
+
+	[ObservableProperty] public partial ContactsLogic ContactsLogicClass { get; set; }
 
 	[RelayCommand]
 	void Add()
@@ -52,6 +54,17 @@ public partial class MainViewModel : ObservableObject
 		};
 
 		await Shell.Current.GoToAsync(nameof(SelectRecipePage), parameters);
+	}
+
+	[RelayCommand]
+	async Task GoToSelectListReceiverPage()
+	{
+		var parameters = new Dictionary<string, object>
+		{
+			{ nameof(MainViewModel), this },
+		};
+
+		await Shell.Current.GoToAsync(nameof(SelectListReceiverPage), parameters);
 	}
 }
 

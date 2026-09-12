@@ -48,7 +48,7 @@
                                 <SwipeItems Mode="Execute">
 
                                     <SwipeItem Text="Status"
-                                BackgroundColor="Green"
+                                BackgroundColor="Transparent"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}},
                                                   Path=BindingContext.MainProductsListClass.ChangeStatusCommand}"
                                 CommandParameter="{Binding .}"/>
@@ -170,7 +170,7 @@
             <Border Style="{StaticResource ProductBorderStyle}">
 
 
-                <Button
+                <Button Command="{Binding GoToSelectListReceiverPageCommand}"
         Text="Kliknij mnie"
         Background="Transparent"
         TextColor="White"

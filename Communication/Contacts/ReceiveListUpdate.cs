@@ -29,7 +29,7 @@ public static class ReceiveListUpdate
 		listsToUpdate.Add("MainList", list);
 	}
 
-	public static void ST(MainViewModel mv)
+	public static void SendMainViewModel(MainViewModel mv)
 	{
 		MainViewModel = mv;
 	}

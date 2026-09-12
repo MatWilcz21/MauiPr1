@@ -45,7 +45,7 @@ public partial class MainProductsListClass : ObservableObject
 	{
 
 		SendSMS sendSMS = new SendSMS(this);
-		await sendSMS.Send("537870143" /*"515623758"*/, Products);
+		await sendSMS.Send(mainViewModel.ContactsLogicClass.SelectedContactPerson.PersonSMSData.PhoneNumber, Products);
 	}
 
 	public async Task DeleteAll()

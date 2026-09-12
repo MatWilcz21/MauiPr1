@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.Pages.SelectListReceiverPage"
+             xmlns:viewmodels="clr-namespace:MauiApp1.ViewerModels"
+             xmlns:products="clr-namespace:MauiApp1.Products"
+             Title="SelectListReceiverPage"
+             x:DataType="viewmodels:SelectListReceiverViewModel"
+             >
+    <Grid RowDefinitions="Auto,*" Padding="10" RowSpacing="15">
+
+        <Label Text="{Binding SelectedFriendName}"/>
+
+        <ScrollView VerticalScrollBarVisibility="Never" Grid.Row="1">
+            <CollectionView ItemsSource="{Binding Friends}">
+
+                <CollectionView.ItemTemplate>
+
+
+                    <DataTemplate x:DataType="viewmodels:FriendFromList">
+
+                        <SwipeView Threshold="100">
+                            
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Edit"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeStatusCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Del"
+                                        BackgroundColor="Red"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeStatusCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Border StrokeShape="RoundRectangle 10"
+                            Padding="3">
+
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="BackgroundColor" Value="Red"/>
+
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="Border"
+                                                     Binding="{Binding Merge}"
+                                                     Value="True">
+                                                <Setter Property="BackgroundColor" Value="Green"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid Padding="0.5" RowDefinitions="40,40" ColumnDefinitions=".90*,.10*" RowSpacing="3" ColumnSpacing="3">
+
+                                    <Label Grid.Column="0"
+                                       Grid.Row="0"
+                                       Grid.RowSpan="2"
+                                       VerticalTextAlignment="Center"
+                                       FontSize="20">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} {1} => {2}">
+                                                <Binding Path="Name"/>
+                                                <Binding Path="OldCount"/>
+                                                <Binding Path="NewCount"/>
+                                            </MultiBinding>
+                                        </Label.Text>
+
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label"
+                 Binding="{Binding Merge}"
+                 Value="False">
+                                                <Setter Property="Text">
+                                                    <Setter.Value>
+                                                        <MultiBinding StringFormat="{}{0} {1}">
+                                                            <Binding Path="Name"/>
+                                                            <Binding Path="OldCount"/>
+                                                        </MultiBinding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </SwipeView>
+
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+        </ScrollView>
+    </Grid>
+</ContentPage>
