@@ -25,7 +25,7 @@
                                 <SwipeItems>
                                     <SwipeItem Text="Edit"
                                         BackgroundColor="Transparent"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeStatusCommand}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeNameCommand}"
                                         CommandParameter="{Binding .}"/>
                                 </SwipeItems>
                             </SwipeView.LeftItems>
@@ -34,7 +34,7 @@
                                 <SwipeItems>
                                     <SwipeItem Text="Del"
                                         BackgroundColor="Red"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeStatusCommand}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeNameCommand}"
                                         CommandParameter="{Binding .}"/>
                                 </SwipeItems>
                             </SwipeView.RightItems>
@@ -42,31 +42,25 @@
                             <Border StrokeShape="RoundRectangle 10"
                             Padding="3">
 
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="BackgroundColor" Value="Red"/>
-
-                                        <Style.Triggers>
-                                            <DataTrigger TargetType="Border"
-                                                     Binding="{Binding Merge}"
-                                                     Value="True">
-                                                <Setter Property="BackgroundColor" Value="Green"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        NumberOfTapsRequired="2"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeNameCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
                                 <Grid Padding="0.5" RowDefinitions="40,40" ColumnDefinitions=".90*,.10*" RowSpacing="3" ColumnSpacing="3">
+
+
 
                                     <Label Grid.Column="0"
                                        Grid.Row="0"
                                        Grid.RowSpan="2"
                                        VerticalTextAlignment="Center"
-                                       FontSize="20">
+                                       FontSize="20"
+                                       Padding="3">
                                         <Label.Text>
-                                            <MultiBinding StringFormat="{}{0} {1} => {2}">
+                                            <MultiBinding StringFormat="{}{0}">
                                                 <Binding Path="Name"/>
-                                                <Binding Path="OldCount"/>
-                                                <Binding Path="NewCount"/>
                                             </MultiBinding>
                                         </Label.Text>
 

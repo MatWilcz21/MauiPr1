@@ -23,7 +23,7 @@
                    Grid.ColumnSpan="1"/>
             <Button Text="Add product" Command="{Binding AddCommand}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1"/>
 
-            <Button Text="Update" Command="{Binding UpdateCommand}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Gray"/>
+            <Button Text="{Binding ContactsLogicClass.SelectedContactPerson.Name, StringFormat='Update to: {0}'}" Command="{Binding UpdateCommand}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Gray"/>
 
         </Grid>
 

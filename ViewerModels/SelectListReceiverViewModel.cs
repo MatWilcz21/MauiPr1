@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using MauiApp1.Communication.Contacts;
 using System.Collections.ObjectModel;
 
@@ -45,5 +46,12 @@ public partial class SelectListReceiverViewModel : ObservableObject, IQueryAttri
 			Friends.Add(new FriendFromList(contactPerson.Name));
 		}
 
+	}
+
+	[RelayCommand]
+	private async Task ChangeName(FriendFromList friend)
+	{
+		mainViewModel.ContactsLogicClass.SelectedContactPerson = mainViewModel.ContactsLogicClass.ContactPersons[friend.Name];
+		await Shell.Current.GoToAsync("../..");
 	}
 }

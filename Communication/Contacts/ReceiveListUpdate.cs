@@ -3,6 +3,7 @@ using MauiApp1.Products.MainProductsList;
 using MauiApp1.ViewerModels;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace MauiApp1.Communication.Contacts;
 
@@ -64,14 +65,20 @@ class UpdateMainList : IUpdateList
 
 			for (int i = dataToUpdateList.Count - 1; i >= 0; i--)
 			{
-				string[] values = dataToUpdateList[i].Replace("\"", "").Split(' ');
+
+				string[] values = Regex.Matches(dataToUpdateList[i], @"(?:""([^""]*)""|(\S+))")
+				  .Select(m => m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value)
+				  .ToArray();
+
+				if (values.Length != 3) continue;
+
+				if (!float.TryParse(values[1], out float productCount))
+					productCount = 1;
 
 				string productName = values[0].ToLower();
-				float productCount = float.Parse(values[1]);
 				string productUnit = values[2];
 
 				mainLists!.AddProductToList(productName, productCount, mainProductsListClass);
-
 
 			}
 

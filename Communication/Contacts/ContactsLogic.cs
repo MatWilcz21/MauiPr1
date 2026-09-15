@@ -5,10 +5,10 @@ public class ContactsLogic
 
 	public ContactsLogic()
 	{
-		ContactPersons.Add("Skarb", new ContactPerson("Skarb", new PersonSMSData("537870143")));
-		ContactPersons.Add("Ja", new ContactPerson("Ja", new PersonSMSData("515623758")));
+		ContactPersons.Add("Al", new ContactPerson("Al", new PersonSMSData("537870143")));
+		ContactPersons.Add("Ma", new ContactPerson("Ma", new PersonSMSData("515623758")));
 
-		SelectedContactPerson = ContactPersons["Skarb"];
+		SelectedContactPerson = ContactPersons["Al"];
 	}
 
 	public ContactPerson SelectedContactPerson { get; set; } = null!;
