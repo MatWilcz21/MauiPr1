@@ -5,24 +5,61 @@ public class ContactsLogic
 
 	public ContactsLogic()
 	{
-		ContactPersons.Add("Al", new ContactPerson("Al", new PersonSMSData("537870143")));
-		ContactPersons.Add("Ma", new ContactPerson("Ma", new PersonSMSData("515623758")));
 
-		SelectedContactPerson = ContactPersons["Al"];
+		Task.Run(() => LoadContacts()).Wait();
+
+		//ContactPersons.Add("Al", new ContactPerson("Al", new PersonSMSData(SecretPhoneNumbers.Ale)));
+		//ContactPersons.Add("Ma", new ContactPerson("Ma", new PersonSMSData(SecretPhoneNumbers.Mat)));
+
+		//Task.Run(() => SaveContacts()).Wait();
+
+		SelectPerson("Al");
 	}
 
 	public ContactPerson SelectedContactPerson { get; set; } = null!;
 
 	public Dictionary<string, ContactPerson> ContactPersons { get; set; } = new();
 
-	/*async Task LoadContacts()
+	public void SelectPerson(string name)
 	{
-		contactPersons.Clear();
+		if (name is null)
+			goto dott;
+
+		ContactPerson c = ContactPersons.GetValueOrDefault(name)!;
+
+		if (c is not null)
+		{
+			SelectedContactPerson = c;
+			return;
+		}
+
+	dott:
+
+		SelectedContactPerson = ContactPersons.FirstOrDefault().Value;
+	}
+
+	async Task LoadContacts()
+	{
+		ContactPersons = await JsonHandler.LoadJson<Dictionary<string, ContactPerson>>(nameof(ContactPersons)) ?? new();
+		SelectPerson(null!);
 	}
 
 	public async Task SaveContacts()
 	{
-		await JsonHandler.SaveJson(contactPersons, nameof(contactPersons));
-	}*/
+		await JsonHandler.SaveJson(ContactPersons, nameof(ContactPersons));
+		SelectPerson(null!);
+	}
+
+	public async Task Add(string name)
+	{
+		ContactPersons.Add(name, new ContactPerson(name, null!));
+		await SaveContacts();
+	}
+
+	public async Task DeleteContact(string name)
+	{
+		ContactPersons.Remove(name);
+		await SaveContacts();
+	}
 
 }

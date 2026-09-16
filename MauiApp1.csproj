@@ -91,6 +91,9 @@
 	  <MauiXaml Update="Pages\EditSelectedRecipePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\EditSelectListReceiverPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\MergeToListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

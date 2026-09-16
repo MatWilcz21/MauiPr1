@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MauiApp1.Communication;
 using MauiApp1.Communication.Contacts;
 using MauiApp1.Pages;
 using MauiApp1.Products;
@@ -14,7 +13,7 @@ public partial class MainViewModel : ObservableObject
 
 	public MainViewModel()
 	{
-		new CommunicationTest();
+		//new CommunicationTest();
 		MainProductsListClass = new MainProductsListClass(this);
 		ContactsLogicClass = new ContactsLogic();
 		ReceiveListUpdate.SendMainViewModel(this);

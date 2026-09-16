@@ -12,13 +12,12 @@ public partial class FriendFromList : ObservableObject
 		Name = _name;
 	}
 
-
 	[ObservableProperty] public partial string Name { get; set; }
 }
 
 public partial class SelectListReceiverViewModel : ObservableObject, IQueryAttributable
 {
-
+	[ObservableProperty] public partial string NewContactNameEntry { get; set; } = string.Empty;
 	[ObservableProperty] public partial string SelectedFriendName { get; set; }
 	[ObservableProperty] public partial ObservableCollection<FriendFromList> Friends { get; set; } = new();
 
@@ -34,24 +33,53 @@ public partial class SelectListReceiverViewModel : ObservableObject, IQueryAttri
 
 		SelectedFriendName = mainViewModel.ContactsLogicClass.SelectedContactPerson.Name;
 
-		PopulateList(mainViewModel.ContactsLogicClass.ContactPersons);
+		RefreshList();
 	}
 
-	void PopulateList(Dictionary<string, ContactPerson> contactPersons)
+	void RefreshList()
 	{
 		Friends.Clear();
 
-		foreach (ContactPerson contactPerson in contactPersons.Values)
+		foreach (ContactPerson contactPerson in mainViewModel.ContactsLogicClass.ContactPersons.Values)
 		{
-			Friends.Add(new FriendFromList(contactPerson.Name));
+			Friends.Insert(0, new FriendFromList(contactPerson.Name));
 		}
 
 	}
 
 	[RelayCommand]
+	async Task Add()
+	{
+
+		if (string.IsNullOrWhiteSpace(NewContactNameEntry)) return;
+
+		await mainViewModel.ContactsLogicClass.Add(NewContactNameEntry.ToLower());
+		NewContactNameEntry = string.Empty;
+
+		RefreshList();
+	}
+
+	[RelayCommand]
 	private async Task ChangeName(FriendFromList friend)
 	{
-		mainViewModel.ContactsLogicClass.SelectedContactPerson = mainViewModel.ContactsLogicClass.ContactPersons[friend.Name];
+		mainViewModel.ContactsLogicClass.SelectPerson(friend.Name);
 		await Shell.Current.GoToAsync("../..");
+	}
+
+	[RelayCommand]
+	private async Task DeleteContact(FriendFromList friend)
+	{
+
+		bool answer = await Shell.Current.DisplayAlert(
+		"Confirmation",
+		$"""Are you sure you want to delete "{friend.Name}"?""",
+		"Yes",
+		"No");
+
+		if (!answer)
+			return;
+
+		await mainViewModel.ContactsLogicClass.DeleteContact(friend.Name);
+		RefreshList();
 	}
 }

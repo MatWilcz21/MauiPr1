@@ -13,6 +13,7 @@ namespace MauiApp1
 			Routing.RegisterRoute(nameof(MergeToListPage), typeof(MergeToListPage));
 			Routing.RegisterRoute(nameof(EditSelectedRecipePage), typeof(EditSelectedRecipePage));
 			Routing.RegisterRoute(nameof(SelectListReceiverPage), typeof(SelectListReceiverPage));
+			Routing.RegisterRoute(nameof(EditSelectListReceiverPage), typeof(EditSelectListReceiverPage));
 		}
 	}
 }

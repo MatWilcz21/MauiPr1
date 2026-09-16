@@ -35,6 +35,9 @@ public static class MauiProgram
 		builder.Services.AddSingleton<SelectListReceiverPage>();
 		builder.Services.AddSingleton<SelectListReceiverViewModel>();
 
+		builder.Services.AddSingleton<EditSelectListReceiverPage>();
+		builder.Services.AddSingleton<EditSelectListReceiverViewModel>();
+
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif

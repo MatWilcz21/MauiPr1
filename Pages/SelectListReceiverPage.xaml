@@ -7,11 +7,24 @@
              Title="SelectListReceiverPage"
              x:DataType="viewmodels:SelectListReceiverViewModel"
              >
-    <Grid RowDefinitions="Auto,*" Padding="10" RowSpacing="15">
+    <Grid RowDefinitions="Auto, Auto,*" Padding="10" RowSpacing="15">
 
-        <Label Text="{Binding SelectedFriendName}"/>
+        <Border Grid.Row="0" StrokeShape="10">
+            <Label Text="{Binding SelectedFriendName}" FontSize="26" HorizontalTextAlignment="Center"/>
+        </Border>
 
-        <ScrollView VerticalScrollBarVisibility="Never" Grid.Row="1">
+        <Grid RowDefinitions="Auto" Padding="3" ColumnDefinitions=".70*, .30*" Grid.Row="1">
+            <Entry Placeholder="Add product"
+       Text="{Binding NewContactNameEntry}"
+       ReturnType="Done"
+       ReturnCommand="{Binding AddCommand}"
+       Grid.Row="0"
+       Grid.Column="0"
+       Grid.ColumnSpan="1"/>
+            <Button Text="Add product" Command="{Binding AddCommand}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1"/>
+        </Grid>
+
+        <ScrollView VerticalScrollBarVisibility="Never" Grid.Row="2">
             <CollectionView ItemsSource="{Binding Friends}">
 
                 <CollectionView.ItemTemplate>
@@ -20,7 +33,7 @@
                     <DataTemplate x:DataType="viewmodels:FriendFromList">
 
                         <SwipeView Threshold="100">
-                            
+
                             <SwipeView.LeftItems>
                                 <SwipeItems>
                                     <SwipeItem Text="Edit"
@@ -34,7 +47,7 @@
                                 <SwipeItems>
                                     <SwipeItem Text="Del"
                                         BackgroundColor="Red"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeNameCommand}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.DeleteContactCommand}"
                                         CommandParameter="{Binding .}"/>
                                 </SwipeItems>
                             </SwipeView.RightItems>
