@@ -1,4 +1,5 @@
-﻿using MauiApp1.Pages;
+﻿using MauiApp1.AppSettings;
+using MauiApp1.Pages;
 using MauiApp1.ViewerModels;
 using Microsoft.Extensions.Logging;
 
@@ -16,6 +17,8 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
+
+		builder.Services.AddSingleton<ApplicationSettings>();
 
 		builder.Services.AddSingleton<MainPage>();
 		builder.Services.AddSingleton<MainViewModel>();

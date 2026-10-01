@@ -6,31 +6,25 @@ using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewerModels;
 
-public partial class SelectRecipeViewerModel : ObservableObject, IQueryAttributable
+[QueryProperty(nameof(mainViewModel), nameof(MainViewModel))]
+public partial class SelectRecipeViewerModel : ObservableObject, IStartableViewModel
 {
-
-	public SelectRecipeViewerModel()
-	{
-		RecipesList = new();
-	}
-
-	public void ApplyQueryAttributes(IDictionary<string, object> query)
-	{
-		if (query.TryGetValue(nameof(MainViewModel), out var value))
-		{
-			mainViewModel = value as MainViewModel ?? throw new Exception(nameof(MainViewModel));
-		}
-
-		Task.Run(() => LoadRecipes().Wait());
-
-	}
 
 	[ObservableProperty] public partial string EnterNewRecipeName { get; set; } = null!;
 
 	[ObservableProperty] public partial ObservableCollection<Recipe> RecipesList { get; set; }
+	public MainViewModel mainViewModel { get; set; } = null!;
 
-	MainViewModel mainViewModel = null!;
+	public async Task Start()
+	{
+		await LoadRecipes();
+	}
 
+
+}
+
+public partial class SelectRecipeViewerModel
+{
 	[RelayCommand]
 	async Task AddNewRecipe()
 	{
@@ -50,7 +44,7 @@ public partial class SelectRecipeViewerModel : ObservableObject, IQueryAttributa
 	}
 
 	[RelayCommand]
-	async Task LoadRecipes()
+	public async Task LoadRecipes()
 	{
 		RecipesList = await JsonHandler.LoadJson<ObservableCollection<Recipe>>("Recipes") ?? new();
 	}
@@ -70,7 +64,7 @@ public partial class SelectRecipeViewerModel : ObservableObject, IQueryAttributa
 			{ nameof(MainViewModel), mainViewModel },
 		};
 
-		await Shell.Current.GoToAsync(nameof(MergeToListPage), parameters);
+		await StartableViewModel.ChangePage(nameof(MergeToListPage), parameters);
 	}
 	[RelayCommand]
 	async Task EditThisRecipe(Recipe selectedRecipe)
@@ -88,6 +82,6 @@ public partial class SelectRecipeViewerModel : ObservableObject, IQueryAttributa
 			{ "selectedRecipeName", selectedRecipeName },
 		};
 
-		await Shell.Current.GoToAsync(nameof(EditSelectedRecipePage), parameters);
+		await StartableViewModel.ChangePage(nameof(EditSelectedRecipePage), parameters);
 	}
 }

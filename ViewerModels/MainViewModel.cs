@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiApp1.AppSettings;
 using MauiApp1.Communication.Contacts;
 using MauiApp1.Pages;
 using MauiApp1.Products;
@@ -11,11 +12,11 @@ namespace MauiApp1.ViewerModels;
 public partial class MainViewModel : ObservableObject
 {
 
-	public MainViewModel()
+	public MainViewModel(ApplicationSettings _settings)
 	{
-		//new CommunicationTest();
+		settings = _settings;
 		MainProductsListClass = new MainProductsListClass(this);
-		ContactsLogicClass = new ContactsLogic();
+		ContactsLogicClass = new ContactsLogic(_settings);
 		ReceiveListUpdate.SendMainViewModel(this);
 	}
 
@@ -24,6 +25,13 @@ public partial class MainViewModel : ObservableObject
 
 	[ObservableProperty] public partial ContactsLogic ContactsLogicClass { get; set; }
 
+	private readonly ApplicationSettings settings;
+
+
+}
+// RelayCommands
+public partial class MainViewModel
+{
 	[RelayCommand]
 	void Add()
 	{
@@ -52,7 +60,7 @@ public partial class MainViewModel : ObservableObject
 			{ nameof(MainViewModel), this },
 		};
 
-		await Shell.Current.GoToAsync(nameof(SelectRecipePage), parameters);
+		await StartableViewModel.ChangePage(nameof(SelectRecipePage), parameters);
 	}
 
 	[RelayCommand]
@@ -63,21 +71,19 @@ public partial class MainViewModel : ObservableObject
 			{ nameof(MainViewModel), this },
 		};
 
-		await Shell.Current.GoToAsync(nameof(SelectListReceiverPage), parameters);
+		await StartableViewModel.ChangePage(nameof(SelectListReceiverPage), parameters);
 	}
 }
 
 static class ItemListUpdater
 {
-	public static void SaveListToJson(MainProductsListClass mainViewModel)
+	public static async Task SaveListToJson(MainProductsListClass mainViewModel)
 	{
-
-		Task.Run(() => JsonHandler.SaveJson(mainViewModel.Products, nameof(mainViewModel.Products))).Wait();
+		await JsonHandler.SaveJson(mainViewModel.Products, nameof(mainViewModel.Products));
 	}
 
 	public static async Task LoadListFromJson(MainProductsListClass mainViewModel)
 	{
-
 		mainViewModel.Products = await JsonHandler.LoadJson<ObservableCollection<MainListProduct>>(nameof(mainViewModel.Products)) ?? new();
 	}
 }

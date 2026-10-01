@@ -13,24 +13,20 @@ public partial class FriendFromList : ObservableObject
 	}
 
 	[ObservableProperty] public partial string Name { get; set; }
-}
 
-public partial class SelectListReceiverViewModel : ObservableObject, IQueryAttributable
+
+}
+[QueryProperty(nameof(mainViewModel), nameof(MainViewModel))]
+public partial class SelectListReceiverViewModel : ObservableObject, IStartableViewModel
 {
 	[ObservableProperty] public partial string NewContactNameEntry { get; set; } = string.Empty;
 	[ObservableProperty] public partial string SelectedFriendName { get; set; }
 	[ObservableProperty] public partial ObservableCollection<FriendFromList> Friends { get; set; } = new();
 
-	MainViewModel mainViewModel = null!;
+	public MainViewModel mainViewModel { get; set; } = null!;
 
-	public void ApplyQueryAttributes(IDictionary<string, object> query)
+	public async Task Start()
 	{
-
-		if (query.TryGetValue(nameof(MainViewModel), out var value))
-		{
-			mainViewModel = value as MainViewModel ?? throw new Exception(nameof(MainViewModel));
-		}
-
 		SelectedFriendName = mainViewModel.ContactsLogicClass.SelectedContactPerson.Name;
 
 		RefreshList();
@@ -47,6 +43,11 @@ public partial class SelectListReceiverViewModel : ObservableObject, IQueryAttri
 
 	}
 
+
+}
+
+public partial class SelectListReceiverViewModel
+{
 	[RelayCommand]
 	async Task Add()
 	{
@@ -62,7 +63,7 @@ public partial class SelectListReceiverViewModel : ObservableObject, IQueryAttri
 	[RelayCommand]
 	private async Task ChangeName(FriendFromList friend)
 	{
-		mainViewModel.ContactsLogicClass.SelectPerson(friend.Name);
+		mainViewModel.ContactsLogicClass.ChangeSelectSavedPerson(friend.Name);
 		await Shell.Current.GoToAsync("../..");
 	}
 

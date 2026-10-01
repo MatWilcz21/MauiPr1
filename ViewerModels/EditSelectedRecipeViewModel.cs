@@ -6,37 +6,64 @@ using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewerModels;
 
-public partial class EditSelectedRecipeViewModel : ObservableObject, IQueryAttributable
+[QueryProperty(nameof(selectRecipeViewerModel), nameof(SelectRecipeViewerModel))]
+[QueryProperty(nameof(selectedRecipeName), "selectedRecipeName")]
+public partial class EditSelectedRecipeViewModel : ObservableObject, IStartableViewModel
 {
-
-	public EditSelectedRecipeViewModel()
-	{
-	}
-
-	public void ApplyQueryAttributes(IDictionary<string, object> query)
-	{
-
-		if (query.TryGetValue(nameof(SelectRecipeViewerModel), out var value))
-		{
-			selectRecipeViewerModel = value as SelectRecipeViewerModel ?? throw new Exception(nameof(SelectRecipeViewerModel));
-		}
-
-		if (query.TryGetValue("selectedRecipeName", out var value1))
-		{
-			selectedRecipeName = value1 as string ?? throw new Exception(nameof(selectedRecipeName));
-		}
-
-		LoadRecipe(InRecipeEditProducts);
-	}
 
 	[ObservableProperty] public partial string EnterNewProductName { get; set; } = null!;
 	[ObservableProperty] public partial ObservableCollection<RecipeProduct> InRecipeEditProducts { get; set; } = new();
 
-	public SelectRecipeViewerModel selectRecipeViewerModel = null!;
 
+	public SelectRecipeViewerModel selectRecipeViewerModel { get; set; } = null!;
 	[ObservableProperty] public partial string selectedRecipeName { get; set; } = null!;
 
+	public async Task Start()
+	{
+		LoadRecipe(InRecipeEditProducts);
+	}
 
+	void SaveRecipe(ObservableCollection<RecipeProduct> products)
+	{
+
+		Recipe recipe = selectRecipeViewerModel.RecipesList.First(r => r.Name == selectedRecipeName);
+
+		recipe.ProductsList.Clear();
+		for (int i = 0; i < products.Count; i++)
+		{
+			recipe.ProductsList.Add(ConvertToPackedRecipeProduct(products[i]));
+		}
+
+		PackedRecipeProduct ConvertToPackedRecipeProduct(RecipeProduct recipeProduct)
+		{
+			return new PackedRecipeProduct(recipeProduct.Name, recipeProduct.Count, recipeProduct.MergeByDefault);
+		}
+	}
+
+
+	void LoadRecipe(ObservableCollection<RecipeProduct> products)
+	{
+
+		Recipe recipe = selectRecipeViewerModel.RecipesList.First(r => r.Name == selectedRecipeName);
+
+		products.Clear();
+
+		for (int i = 0; i < recipe.ProductsList.Count; i++)
+		{
+			PackedRecipeProduct packedRecipeProduct = recipe.ProductsList[i];
+
+			RecipeProduct newRecipeProduct = new RecipeProduct(packedRecipeProduct.Name, packedRecipeProduct.Count, packedRecipeProduct.MergeByDefault);
+
+			newRecipeProduct.MergeByDefault = packedRecipeProduct.MergeByDefault; //TO_DO ogarnac too/ nie dotykac potrzebne
+
+			products.Add(newRecipeProduct);
+		}
+
+	}
+}
+
+public partial class EditSelectedRecipeViewModel
+{
 	[RelayCommand]
 	private void Add()
 	{
@@ -101,43 +128,4 @@ public partial class EditSelectedRecipeViewModel : ObservableObject, IQueryAttri
 		await selectRecipeViewerModel.SaveRecipes();
 		await Shell.Current.GoToAsync("..");
 	}
-
-	void SaveRecipe(ObservableCollection<RecipeProduct> products)
-	{
-
-		Recipe recipe = selectRecipeViewerModel.RecipesList.First(r => r.Name == selectedRecipeName);
-
-		recipe.ProductsList.Clear();
-		for (int i = 0; i < products.Count; i++)
-		{
-			recipe.ProductsList.Add(ConvertToPackedRecipeProduct(products[i]));
-		}
-
-		PackedRecipeProduct ConvertToPackedRecipeProduct(RecipeProduct recipeProduct)
-		{
-			return new PackedRecipeProduct(recipeProduct.Name, recipeProduct.Count, recipeProduct.MergeByDefault);
-		}
-	}
-
-
-	void LoadRecipe(ObservableCollection<RecipeProduct> products)
-	{
-
-		Recipe recipe = selectRecipeViewerModel.RecipesList.First(r => r.Name == selectedRecipeName);
-
-		products.Clear();
-
-		for (int i = 0; i < recipe.ProductsList.Count; i++)
-		{
-			PackedRecipeProduct packedRecipeProduct = recipe.ProductsList[i];
-
-			RecipeProduct newRecipeProduct = new RecipeProduct(packedRecipeProduct.Name, packedRecipeProduct.Count, packedRecipeProduct.MergeByDefault);
-
-			newRecipeProduct.MergeByDefault = packedRecipeProduct.MergeByDefault; //TO_DO ogarnac too/ nie dotykac potrzebne
-
-			products.Add(newRecipeProduct);
-		}
-
-	}
-
 }

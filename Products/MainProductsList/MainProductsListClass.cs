@@ -14,7 +14,7 @@ public partial class MainProductsListClass : ObservableObject
 
 	public MainProductsListClass(MainViewModel _mainViewModel)
 	{
-
+		//TO_DO async constructor
 		mainViewModel = _mainViewModel;
 
 		receiveSMS = new ReceiveSMS(mainViewModel);
@@ -29,40 +29,6 @@ public partial class MainProductsListClass : ObservableObject
 	[ObservableProperty] public partial ObservableCollection<MainListProduct> Products { get; set; } = new();
 
 	MainViewModel mainViewModel;
-
-	public void Add(string name)
-	{
-
-		if (!BaseProduct.GetTrimmedProductNameIfValidString(out string trimmedName, name)) return;
-
-		float productCount = 1; //TO_DO parsuj czy nie ma dopisanej ilosci produktu
-
-		Products.AddProductToList(trimmedName, productCount, this);
-		SaveList();
-	}
-
-	public async Task Update()
-	{
-
-		SendSMS sendSMS = new SendSMS(this);
-		await sendSMS.Send(mainViewModel.ContactsLogicClass.SelectedContactPerson.PersonSMSData.PhoneNumber, Products);
-	}
-
-	public async Task DeleteAll()
-	{
-
-		bool answer = await Shell.Current.DisplayAlert(
-		"Confirmation",
-		"Are you sure you want to delete all products?",
-		"Yes",
-		"No");
-
-		if (!answer)
-			return;
-
-		Products.Clear();
-		SaveList();
-	}
 
 	public void SortProductsByStatus(MainListProduct product, bool toCart)
 	{
@@ -81,28 +47,70 @@ public partial class MainProductsListClass : ObservableObject
 
 	}
 
-	#region Commands
+	public async Task SaveList()
+	{
+		await ItemListUpdater.SaveListToJson(this);
+	}
+}
+
+public partial class MainProductsListClass
+{
+	public async Task Add(string name)
+	{
+
+		if (!BaseProduct.GetTrimmedProductNameIfValidString(out string trimmedName, name)) return;
+
+		float productCount = 1; //TO_DO parsuj czy nie ma dopisanej ilosci produktu
+
+		Products.AddProductToList(trimmedName, productCount, this);
+		await SaveList();
+	}
+
+	public async Task Update()
+	{
+		if (mainViewModel.ContactsLogicClass.SelectedContactPerson is null) return;
+		SendSMS sendSMS = new SendSMS(this);
+		await sendSMS.Send(mainViewModel.ContactsLogicClass.SelectedContactPerson.PersonSMSData.PhoneNumber, Products);
+	}
+
+	public async Task DeleteAll()
+	{
+
+		bool answer = await Shell.Current.DisplayAlert(
+		"Confirmation",
+		"Are you sure you want to delete all products?",
+		"Yes",
+		"No");
+
+		if (!answer)
+			return;
+
+		Products.Clear();
+		await SaveList();
+	}
+
+
 
 
 	[RelayCommand]
-	private void Delete(MainListProduct product)
+	private async Task Delete(MainListProduct product)
 	{
 		Products.Remove(product);
-		SaveList();
+		await SaveList();
 	}
 
 	[RelayCommand]
-	private void Increment(MainListProduct product)
+	private async Task Increment(MainListProduct product)
 	{
 		product.Increment();
-		SaveList();
+		await SaveList();
 	}
 
 	[RelayCommand]
 	private async Task ChangeName(MainListProduct product)
 	{
 		await product.ChangeName(Products);
-		SaveList();
+		await SaveList();
 	}
 
 	[RelayCommand]
@@ -120,28 +128,23 @@ public partial class MainProductsListClass : ObservableObject
 			product.Count = value;
 
 
-		SaveList();
+		await SaveList();
 	}
 
 	[RelayCommand]
-	private void Decrement(MainListProduct product)
+	private async Task Decrement(MainListProduct product)
 	{
 		product.Decrement();
-		SaveList();
+		await SaveList();
 	}
 	[RelayCommand]
-	private void ChangeStatus(MainListProduct product)
+	private async Task ChangeStatus(MainListProduct product)
 	{
 		product.IsInCart = !product.IsInCart;
 
 		SortProductsByStatus(product, product.IsInCart);
 
-		SaveList();
-	}
-	public void SaveList()
-	{
-		ItemListUpdater.SaveListToJson(this);
+		await SaveList();
 	}
 
-	#endregion
 }

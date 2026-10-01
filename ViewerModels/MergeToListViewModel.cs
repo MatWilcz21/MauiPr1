@@ -7,19 +7,22 @@ using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewerModels;
 
-public partial class MergeToListViewModel : ObservableObject, IQueryAttributable
+[QueryProperty(nameof(mainViewModel), nameof(MainViewModel))]
+[QueryProperty(nameof(recipe), nameof(Recipe))]
+public partial class MergeToListViewModel : ObservableObject, IStartableViewModel
 {
-	public void ApplyQueryAttributes(IDictionary<string, object> query)
+
+	[ObservableProperty] public partial ObservableCollection<MergeProduct> MergeProductsList { get; set; }
+
+	public MainViewModel mainViewModel { get; set; } = null!;
+	public Recipe recipe { get; set; } = null!;
+
+	MergeHandler mergeHandler = null!;
+
+	public async Task Start()
 	{
 		MergeProductsList = new();
-		if (query.TryGetValue(nameof(MainViewModel), out var value))
-		{
-			mainViewModel = value as MainViewModel ?? throw new Exception(nameof(MainViewModel));
-		}
-		if (query.TryGetValue(nameof(Recipe), out var valuex))
-		{
-			recipe = valuex as Recipe ?? throw new Exception(nameof(Recipe));
-		}
+
 
 		mergeHandler = new MergeHandler(mainViewModel, this);
 
@@ -42,17 +45,12 @@ public partial class MergeToListViewModel : ObservableObject, IQueryAttributable
 
 			return productView.Count;
 		}
-
 	}
 
-	[ObservableProperty] public partial ObservableCollection<MergeProduct> MergeProductsList { get; set; }
+}
 
-	MainViewModel mainViewModel = null!;
-	Recipe recipe = null!;
-
-	MergeHandler mergeHandler = null!;
-
-
+public partial class MergeToListViewModel
+{
 	[RelayCommand]
 	private void ChangeStatus(MergeProduct mergeProduct)
 	{
@@ -65,7 +63,6 @@ public partial class MergeToListViewModel : ObservableObject, IQueryAttributable
 		mergeHandler.CreateMerge();
 		await Shell.Current.GoToAsync("../..");
 	}
-
 }
 
 class MergeHandler(MainViewModel mainViewModel, MergeToListViewModel mergeToListViewModel)
