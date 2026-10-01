@@ -1,14 +1,10 @@
-﻿using MauiApp1.AppSettings;
-
-namespace MauiApp1.Communication.Contacts;
+﻿namespace MauiApp1.Communication.Contacts;
 
 public class ContactsLogic
 {
 
-	public ContactsLogic(ApplicationSettings _settings)
+	public ContactsLogic()
 	{
-
-		contacts = _settings.ApplicationContacts;
 
 		Task.Run(() => LoadContacts()).Wait();
 
@@ -16,46 +12,42 @@ public class ContactsLogic
 		//ContactPersons.Add("Ma", new ContactPerson("Ma", new PersonSMSData(SecretPhoneNumbers.Mat)));
 
 		//Task.Run(() => SaveContacts()).Wait();
+
+		ChangeSelectSavedPerson("Al");
 	}
 
-	public ContactPerson? SelectedContactPerson { get; set; } = null;
+	public ContactPerson SelectedContactPerson { get; set; } = null!;
 
 	public Dictionary<string, ContactPerson> ContactPersons { get; set; } = new();
 
-	ApplicationContacts contacts;
-
-	public void SelectSavedPerson()
+	public void ChangeSelectSavedPerson(string name)
 	{
-		if (contacts.SavedReceiverName is null)
+		if (name is null)
+			goto dott;
+
+		ContactPerson c = ContactPersons.GetValueOrDefault(name)!;
+
+		if (c is not null)
 		{
-			SelectedContactPerson = null;
+			SelectedContactPerson = c;
 			return;
 		}
 
-		if (!ContactPersons.ContainsKey(contacts.SavedReceiverName))
-		{
-			SelectedContactPerson = null;
-			contacts.SavedReceiverName = null;
-			return;
-		}
+	dott:
 
-		SelectedContactPerson = ContactPersons[contacts.SavedReceiverName];
-	}
-
-	public void ChangeSelectSavedPerson(string nameToSelect)
-	{
-		contacts.SavedReceiverName = nameToSelect;
+		SelectedContactPerson = ContactPersons.FirstOrDefault().Value;
 	}
 
 	async Task LoadContacts()
 	{
 		ContactPersons = await JsonHandler.LoadJson<Dictionary<string, ContactPerson>>(nameof(ContactPersons)) ?? new();
-		SelectSavedPerson();
+		ChangeSelectSavedPerson(null!);
 	}
 
 	public async Task SaveContacts()
 	{
 		await JsonHandler.SaveJson(ContactPersons, nameof(ContactPersons));
+		ChangeSelectSavedPerson(null!);
 	}
 
 	public async Task Add(string name)

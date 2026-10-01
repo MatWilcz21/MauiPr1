@@ -53,6 +53,19 @@ public partial class MainProductsListClass : ObservableObject
 	}
 }
 
+static class ItemListUpdater
+{
+	public static async Task SaveListToJson(MainProductsListClass mainViewModel)
+	{
+		await JsonHandler.SaveJson(mainViewModel.Products, nameof(mainViewModel.Products));
+	}
+
+	public static async Task LoadListFromJson(MainProductsListClass mainViewModel)
+	{
+		mainViewModel.Products = await JsonHandler.LoadJson<ObservableCollection<MainListProduct>>(nameof(mainViewModel.Products)) ?? new();
+	}
+}
+
 public partial class MainProductsListClass
 {
 	public async Task Add(string name)

@@ -20,7 +20,7 @@ public partial class FriendFromList : ObservableObject
 public partial class SelectListReceiverViewModel : ObservableObject, IStartableViewModel
 {
 	[ObservableProperty] public partial string NewContactNameEntry { get; set; } = string.Empty;
-	[ObservableProperty] public partial string SelectedFriendName { get; set; }
+	[ObservableProperty] public partial string? SelectedFriendName { get; set; }
 	[ObservableProperty] public partial ObservableCollection<FriendFromList> Friends { get; set; } = new();
 
 	public MainViewModel mainViewModel { get; set; } = null!;
