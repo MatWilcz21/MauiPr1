@@ -75,9 +75,15 @@ public partial class SelectListReceiverViewModel
 	}
 
 	[RelayCommand]
-	private async Task ChangeName(FriendFromList friend)
+	private async Task SelectPerson(FriendFromList friend)
 	{
 		await mainViewModel.ContactsLogicClass.ChangeSelectSavedPerson(friend.Name);
+		await Shell.Current.GoToAsync("../..");
+	}
+
+	[RelayCommand]
+	private async Task EditPerson(FriendFromList friend)
+	{
 		await Shell.Current.GoToAsync("../..");
 	}
 

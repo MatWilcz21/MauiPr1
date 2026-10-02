@@ -35,10 +35,10 @@
                         <SwipeView Threshold="100">
 
                             <SwipeView.LeftItems>
-                                <SwipeItems>
-                                    <SwipeItem Text="Edit"
+                                <SwipeItems Mode="Execute">
+                                    <SwipeItem Text="Select"
                                         BackgroundColor="Transparent"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeNameCommand}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.SelectPersonCommand}"
                                         CommandParameter="{Binding .}"/>
                                 </SwipeItems>
                             </SwipeView.LeftItems>
@@ -58,7 +58,7 @@
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer
                                         NumberOfTapsRequired="2"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.ChangeNameCommand}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.EditPersonCommand}"
                                         CommandParameter="{Binding .}"/>
                                 </Border.GestureRecognizers>
                                 <Grid Padding="0.5" RowDefinitions="40,40" ColumnDefinitions=".90*,.10*" RowSpacing="3" ColumnSpacing="3">
