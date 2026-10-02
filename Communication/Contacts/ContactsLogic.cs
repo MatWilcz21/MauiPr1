@@ -5,7 +5,7 @@ public class ContactsLogic
 
 	public ContactsLogic()
 	{
-
+		//TO_DO gdy contacty są puste wywala blad przy probie wyswietlenia listy
 		Task.Run(() => LoadContacts()).Wait();
 
 		//ContactPersons.Add("Al", new ContactPerson("Al", new PersonSMSData(SecretPhoneNumbers.Ale)));
@@ -13,41 +13,54 @@ public class ContactsLogic
 
 		//Task.Run(() => SaveContacts()).Wait();
 
-		ChangeSelectSavedPerson("Al");
+		//ChangeSelectSavedPerson("Al");
 	}
 
-	public ContactPerson SelectedContactPerson { get; set; } = null!;
+	public ContactPerson? SelectedContactPerson { get; set; }
 
-	public Dictionary<string, ContactPerson> ContactPersons { get; set; } = new();
+	public Dictionary<string, ContactPerson> ContactPersons { get; set; }
 
 	public void ChangeSelectSavedPerson(string name)
 	{
 		if (name is null)
-			goto dott;
-
-		ContactPerson c = ContactPersons.GetValueOrDefault(name)!;
-
-		if (c is not null)
 		{
-			SelectedContactPerson = c;
+			SelectedContactPerson = null;
 			return;
 		}
 
-	dott:
+		ContactPerson? c = ContactPersons.GetValueOrDefault(name)!;
+		if (c is null)
+		{
+			SelectedContactPerson = null;
+			return;
+		}
 
-		SelectedContactPerson = ContactPersons.FirstOrDefault().Value;
+		SelectedContactPerson = c;
+
+		SaveContacts();
 	}
 
 	async Task LoadContacts()
 	{
-		ContactPersons = await JsonHandler.LoadJson<Dictionary<string, ContactPerson>>(nameof(ContactPersons)) ?? new();
-		ChangeSelectSavedPerson(null!);
+
+		PackedContacts? p = await JsonHandler.LoadJson<PackedContacts>(nameof(PackedContacts));
+
+		if (p is not null)
+		{
+			ContactPersons = p.ContactPersons;
+			ChangeSelectSavedPerson(p.SelectedContact);
+			return;
+		}
+
+		ContactPersons = new();
 	}
 
 	public async Task SaveContacts()
 	{
-		await JsonHandler.SaveJson(ContactPersons, nameof(ContactPersons));
-		ChangeSelectSavedPerson(null!);
+
+		PackedContacts p = new PackedContacts(ContactPersons, SelectedContactPerson.Name);
+
+		await JsonHandler.SaveJson(p, nameof(PackedContacts));
 	}
 
 	public async Task Add(string name)
@@ -63,3 +76,5 @@ public class ContactsLogic
 	}
 
 }
+
+public record class PackedContacts(Dictionary<string, ContactPerson> ContactPersons, string SelectedContact);

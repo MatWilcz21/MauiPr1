@@ -21,8 +21,6 @@ public class ApplicationSettings
 		ApplicationSettingsMainBody? outt = await JsonHandler.LoadJson<ApplicationSettingsMainBody>(nameof(ApplicationSettings));
 
 
-		int x = 0;
-
 		if (outt is not null)
 		{
 			ApplicationSettingsMainBody = outt;
