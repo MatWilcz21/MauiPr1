@@ -15,7 +15,7 @@ public partial class MainViewModel : ObservableObject
 		settings = _settings;
 		Task.Run(() => _settings.LoadSettings()).Wait();
 		MainProductsListClass = new MainProductsListClass(this);
-		ContactsLogicClass = new ContactsLogic();
+		ContactsLogicClass = new ContactsLogic(this);
 		ReceiveListUpdate.SendMainViewModel(this);
 
 	}

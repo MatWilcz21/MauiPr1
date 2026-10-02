@@ -1,10 +1,14 @@
-﻿namespace MauiApp1.Communication.Contacts;
+﻿using MauiApp1.ViewerModels;
+
+namespace MauiApp1.Communication.Contacts;
 
 public class ContactsLogic
 {
 
-	public ContactsLogic()
+	public ContactsLogic(MainViewModel _mainViewModel)
 	{
+		mainViewModel = _mainViewModel;
+
 		//TO_DO gdy contacty są puste wywala blad przy probie wyswietlenia listy
 		Task.Run(() => LoadContacts()).Wait();
 
@@ -16,13 +20,17 @@ public class ContactsLogic
 		//ChangeSelectSavedPerson("Al");
 	}
 
+	public static event EventHandler? ThresholdReached;
+
 	public ContactPerson? SelectedContactPerson { get; set; }
 
 	public Dictionary<string, ContactPerson> ContactPersons { get; set; }
 
-	public void ChangeSelectSavedPerson(string name)
+	MainViewModel mainViewModel;
+
+	public async Task ChangeSelectSavedPerson(string name)
 	{
-		if (name is null)
+		if (name == string.Empty)
 		{
 			SelectedContactPerson = null;
 			return;
@@ -37,7 +45,9 @@ public class ContactsLogic
 
 		SelectedContactPerson = c;
 
-		SaveContacts();
+		ThresholdReached?.Invoke(this, EventArgs.Empty);
+
+		await SaveContacts();
 	}
 
 	async Task LoadContacts()
@@ -48,11 +58,12 @@ public class ContactsLogic
 		if (p is not null)
 		{
 			ContactPersons = p.ContactPersons;
-			ChangeSelectSavedPerson(p.SelectedContact);
+			await ChangeSelectSavedPerson(p.SelectedContact);
 			return;
 		}
 
 		ContactPersons = new();
+		await ChangeSelectSavedPerson(string.Empty);
 	}
 
 	public async Task SaveContacts()

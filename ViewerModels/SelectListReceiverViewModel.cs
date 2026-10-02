@@ -20,19 +20,34 @@ public partial class FriendFromList : ObservableObject
 public partial class SelectListReceiverViewModel : ObservableObject, IStartableViewModel
 {
 	[ObservableProperty] public partial string NewContactNameEntry { get; set; } = string.Empty;
-	[ObservableProperty] public partial string? SelectedFriendName { get; set; }
+	[ObservableProperty] public partial string SelectedFriendName { get; set; }
 	[ObservableProperty] public partial ObservableCollection<FriendFromList> Friends { get; set; } = new();
 
 	public MainViewModel mainViewModel { get; set; } = null!;
 
 	public async Task Start()
 	{
-		SelectedFriendName = mainViewModel.ContactsLogicClass.SelectedContactPerson.Name;
+
+		ContactsLogic.ThresholdReached += RefreshSelectedContactName;
 
 		RefreshList();
+		RefreshSelectedContactName(this, EventArgs.Empty);
+		await Task.CompletedTask;
 	}
 
-	void RefreshList()
+	public void RefreshSelectedContactName(object? sender, EventArgs e)
+	{
+
+		if (mainViewModel.ContactsLogicClass.SelectedContactPerson is not null)
+		{
+			SelectedFriendName = mainViewModel.ContactsLogicClass.SelectedContactPerson.Name;
+			return;
+		}
+
+		SelectedFriendName = "Not selected";
+	}
+
+	public void RefreshList()
 	{
 		Friends.Clear();
 
@@ -42,7 +57,6 @@ public partial class SelectListReceiverViewModel : ObservableObject, IStartableV
 		}
 
 	}
-
 
 }
 
@@ -63,7 +77,7 @@ public partial class SelectListReceiverViewModel
 	[RelayCommand]
 	private async Task ChangeName(FriendFromList friend)
 	{
-		mainViewModel.ContactsLogicClass.ChangeSelectSavedPerson(friend.Name);
+		await mainViewModel.ContactsLogicClass.ChangeSelectSavedPerson(friend.Name);
 		await Shell.Current.GoToAsync("../..");
 	}
 
